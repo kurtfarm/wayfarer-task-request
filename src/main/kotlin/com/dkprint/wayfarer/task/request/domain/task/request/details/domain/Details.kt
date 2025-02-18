@@ -11,36 +11,36 @@ import java.time.LocalDate
 
 @Entity
 @Table(name = "task_request_details")
-class TaskRequestDetails(
+class Details(
     @Column(name = "product_name")
-    private val productName: String,
+    private var productName: String,
 
     @Column(name = "product_type")
-    private val productType: String,
+    private var productType: String,
 
     @Column(name = "standard")
-    private val standard: Int,
+    private var standard: Int,
 
     @Column(name = "width")
-    private val width: Int,
+    private var width: Int,
 
     @Column(name = "thickness")
-    private val thickness: Int,
+    private var thickness: Int,
 
     @Column(name = "order_date")
     private val orderDate: LocalDate,
 
     @Column(name = "due_date")
-    private val dueDate: LocalDate,
+    private var dueDate: LocalDate,
 
     @Column(name = "sheets_count")
-    private val sheetsCount: Int,
+    private var sheetsCount: Int,
 
     @Column(name = "meter")
-    private val meter: Int,
+    private var meter: Int,
 
     @Column(name = "rolls_count")
-    private val rollsCount: Int
+    private var rollsCount: Int
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
