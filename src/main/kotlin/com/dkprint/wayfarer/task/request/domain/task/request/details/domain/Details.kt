@@ -1,17 +1,23 @@
 package com.dkprint.wayfarer.task.request.domain.task.request.details.domain
 
 import com.dkprint.wayfarer.task.request.domain.model.BaseEntity
+import com.dkprint.wayfarer.task.request.domain.task.request.domain.TaskRequest
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDate
 
 @Entity
 @Table(name = "task_request_details")
 class Details(
+    @Id
+    @OneToOne
+    @JoinColumn(name = "task_request_id")
+    private var taskRequest: TaskRequest,
+
     @Column(name = "product_name")
     private var productName: String,
 
@@ -42,11 +48,6 @@ class Details(
     @Column(name = "rolls_count")
     private var rollsCount: Int
 ) : BaseEntity() {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private var id: Long = 0L
-
     init {
         validate()
     }
