@@ -17,5 +17,5 @@ abstract class BaseEntity {
     lateinit var updatedAt: LocalDateTime
 
     @Column(name = "is_deleted")
-    var isDeleted: Int = 0
+    var isDeleted: Boolean = false
 }
