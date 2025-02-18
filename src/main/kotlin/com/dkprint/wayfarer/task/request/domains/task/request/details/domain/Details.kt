@@ -17,6 +17,9 @@ class Details(
     @JoinColumn(name = "task_request_id")
     private var taskRequest: TaskRequest,
 
+    @Column(name = "code_id")
+    private var codeId: Long,
+
     @Column(name = "product_name")
     private var productName: String,
 

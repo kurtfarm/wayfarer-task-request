@@ -1,4 +1,4 @@
-package com.dkprint.wayfarer.task.request.domains.task.request.printing.domain
+package com.dkprint.wayfarer.task.request.domains.task.request.slitting.domain
 
 import com.dkprint.wayfarer.task.request.domains.task.request.domain.TaskRequest
 import jakarta.persistence.Column
@@ -8,49 +8,39 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Entity
-@Table(name = "task_request_printing")
-class Printing(
+@Table(name = "task_request_slitting")
+class Slitting(
     @Id
     @OneToOne
     @JoinColumn(name = "task_request_id")
     private var taskRequest: TaskRequest,
 
-    @Column(name = "copperplate_id")
-    private var copperplateId: Long,
+    @Column(name = "vendor_id")
+    private var vendorId: Long,
 
-    @Column(name = "number_of_inks")
-    private var numberOfInks: String,
+    @Column(name = "slitting_width")
+    private var slittingWidth: Int,
 
-    @Column(name = "width")
-    private var width: Int,
+    @Column(name = "slitting_height")
+    private var slittingHeight: Int,
 
-    @Column(name = "height")
-    private var height: Int,
+    @Column(name = "quantity")
+    private var quantity: Long,
 
     @Column(name = "due_date")
-    private var dueDate: LocalDate,
-
-    @Column(name = "printing_type")
-    private var printingType: String,
-
-    @Column(name = "supervision_date")
-    private var supervisionDate: LocalDateTime,
-
-    @Column(name = "printing_direction")
-    private var printingDirection: Int
+    private var dueDate: LocalDate
 ) {
     init {
         validate()
     }
 
     private fun validate() {
-        require(width > 0) {
+        require(slittingWidth > 0) {
             "너비는 0보다 커야 합니다."
         }
-        require(height > 0) {
+        require(slittingHeight > 0) {
             "높이는 0보다 커야 합니다."
         }
         require(dueDate.isAfter(LocalDate.now())) {
