@@ -1,0 +1,50 @@
+package com.dkprint.wayfarer.task.request.domains.task.request.lamination.domain
+
+import com.dkprint.wayfarer.task.request.domains.task.request.domain.TaskRequest
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToOne
+import jakarta.persistence.Table
+import java.time.LocalDate
+
+@Entity
+@Table(name = "task_request_lamination")
+class Lamination(
+    @Id
+    @OneToOne
+    @JoinColumn(name = "task_request_id")
+    private var taskRequest: TaskRequest,
+
+    @Column(name = "sequence")
+    private var sequence: Int,
+
+    @Column(name = "lamination_type")
+    private var laminationType: String,
+
+    @Column(name = "quantity")
+    private var quantity: Int,
+
+    @Column(name = "comment")
+    private var comment: String,
+
+    @Column(name = "due_date")
+    private var dueDate: LocalDate
+) {
+    init {
+        validate()
+    }
+
+    private fun validate() {
+        require(sequence > 0) {
+            "작업순서는 0보다 커야 합니다."
+        }
+        require(quantity > 0) {
+            "수량은 0보다 커야 합니다."
+        }
+        require(dueDate.isAfter(LocalDate.now())) {
+            "납기일은 현재 날짜 이후여야 합니다."
+        }
+    }
+}
