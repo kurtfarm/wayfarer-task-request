@@ -13,25 +13,25 @@ import java.time.LocalDate
 @Table(name = "material_fabric")
 class Fabric(
     @Column(name = "fabric_class")
-    private val fabricClass: String,
+    private var fabricClass: String,
 
     @Column(name = "fabric_type")
-    private val fabricType: String,
+    private var fabricType: String,
 
     @Column(name = "standard")
-    private val standard: Int,
+    private var standard: Int,
 
     @Column(name = "width")
-    private val width: Int,
+    private var width: Int,
 
     @Column(name = "quantity")
-    private val quantity: Int,
+    private var quantity: Int,
 
     @Column(name = "eta")
-    private val eta: LocalDate,
+    private var eta: LocalDate,
 
     @Column(name = "status")
-    private val status: Boolean
+    private var status: Boolean
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
