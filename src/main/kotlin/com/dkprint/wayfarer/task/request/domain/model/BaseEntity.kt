@@ -15,4 +15,7 @@ abstract class BaseEntity {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     lateinit var updatedAt: LocalDateTime
+
+    @Column(name = "is_deleted")
+    var isDeleted: Int = 0
 }
