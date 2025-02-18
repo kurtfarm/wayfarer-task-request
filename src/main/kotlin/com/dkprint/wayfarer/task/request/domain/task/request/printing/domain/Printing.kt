@@ -1,10 +1,11 @@
 package com.dkprint.wayfarer.task.request.domain.task.request.printing.domain
 
+import com.dkprint.wayfarer.task.request.domain.task.request.domain.TaskRequest
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -12,6 +13,11 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "task_request_printing")
 class Printing(
+    @Id
+    @OneToOne
+    @JoinColumn(name = "task_request_id")
+    private var taskRequest: TaskRequest,
+
     @Column(name = "number_of_inks")
     private var numberOfInks: String,
 
@@ -33,10 +39,6 @@ class Printing(
     @Column(name = "printing_direction")
     private var printingDirection: Int
 ) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private var id: Long = 0L
-
     init {
         validate()
     }
