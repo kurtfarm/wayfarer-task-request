@@ -17,6 +17,9 @@ class Lamination(
     @JoinColumn(name = "task_request_id")
     private var taskRequest: TaskRequest,
 
+    @Column(name = "vendor_id")
+    private var vendorId: Long,
+
     @Column(name = "sequence")
     private var sequence: Int,
 
