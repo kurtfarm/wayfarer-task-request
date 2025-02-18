@@ -1,4 +1,4 @@
-package com.dkprint.wayfarer.task.request.domain.task.request.domain
+package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue

@@ -1,7 +1,7 @@
-package com.dkprint.wayfarer.task.request.domain.material.fabric.domain
+package com.dkprint.wayfarer.task.request.domains.material.fabric.domain
 
-import com.dkprint.wayfarer.task.request.domain.model.BaseEntity
-import com.dkprint.wayfarer.task.request.domain.task.request.domain.TaskRequest
+import com.dkprint.wayfarer.task.request.domains.model.BaseEntity
+import com.dkprint.wayfarer.task.request.domains.task.request.domain.TaskRequest
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
