@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domain.task.request.details.domain
 
+import com.dkprint.wayfarer.task.request.domain.model.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -17,8 +18,8 @@ class TaskRequestDetails(
     @Column(name = "product_type")
     private val productType: String,
 
-    @Column(name = "specification")
-    private val specification: Int,
+    @Column(name = "standard")
+    private val standard: Int,
 
     @Column(name = "width")
     private val width: Int,
@@ -39,8 +40,8 @@ class TaskRequestDetails(
     private val meter: Int,
 
     @Column(name = "rolls_count")
-    private val rollsCount: Int,
-) {
+    private val rollsCount: Int
+) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
