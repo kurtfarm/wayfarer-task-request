@@ -1,6 +1,5 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.details.domain
 
-import com.dkprint.wayfarer.task.request.domains.model.BaseEntity
 import com.dkprint.wayfarer.task.request.domains.task.request.domain.TaskRequest
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -47,7 +46,7 @@ class Details(
 
     @Column(name = "rolls_count")
     private var rollsCount: Int
-) : BaseEntity() {
+) {
     init {
         validate()
     }
