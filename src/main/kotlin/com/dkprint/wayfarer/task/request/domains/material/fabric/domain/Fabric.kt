@@ -1,23 +1,17 @@
 package com.dkprint.wayfarer.task.request.domains.material.fabric.domain
 
 import com.dkprint.wayfarer.task.request.domains.model.BaseEntity
-import com.dkprint.wayfarer.task.request.domains.task.request.domain.TaskRequest
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDate
 
 @Entity
 @Table(name = "material_fabric")
 class Fabric(
-    @Id
-    @OneToOne
-    @JoinColumn(name = "task_request_id")
-    private var taskRequest: TaskRequest,
-
     @Column(name = "fabric_class")
     private var fabricClass: String,
 
@@ -39,6 +33,10 @@ class Fabric(
     @Column(name = "status")
     private var status: Boolean
 ) : BaseEntity() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private var id: Long = 0L
+
     init {
         validate()
     }
