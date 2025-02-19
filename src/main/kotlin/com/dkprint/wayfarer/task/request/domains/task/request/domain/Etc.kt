@@ -1,6 +1,5 @@
-package com.dkprint.wayfarer.task.request.domains.task.request.etc.domain
+package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
-import com.dkprint.wayfarer.task.request.domains.task.request.domain.TaskRequest
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
