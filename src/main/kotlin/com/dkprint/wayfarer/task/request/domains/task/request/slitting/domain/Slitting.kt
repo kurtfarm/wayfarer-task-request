@@ -17,9 +17,6 @@ class Slitting(
     @JoinColumn(name = "task_request_id")
     private var taskRequest: TaskRequest,
 
-    @Column(name = "vendor_id")
-    private var vendorId: Long,
-
     @Column(name = "slitting_width")
     private var slittingWidth: Int,
 
@@ -30,7 +27,10 @@ class Slitting(
     private var quantity: Long,
 
     @Column(name = "due_date")
-    private var dueDate: LocalDate
+    private var dueDate: LocalDate,
+
+    @Column(name = "vendor_id")
+    private var vendorId: Long
 ) {
     init {
         validate()

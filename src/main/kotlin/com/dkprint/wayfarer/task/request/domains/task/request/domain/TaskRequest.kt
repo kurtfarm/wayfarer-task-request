@@ -54,7 +54,7 @@ class TaskRequest(
     private var processingComment: String,
 
     @Column(name = "print_design")
-    private var printDesign: String,
+    private var printDesign: String
 ) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

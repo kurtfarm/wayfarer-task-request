@@ -12,6 +12,12 @@ import java.time.LocalDate
 @Entity
 @Table(name = "material_fabric")
 class Fabric(
+    @Column(name = "code_id")
+    private var codeId: Long,
+
+    @Column(name = "vendor_id")
+    private var vendorId: Long,
+
     @Column(name = "fabric_class")
     private var fabricClass: String,
 
@@ -23,6 +29,9 @@ class Fabric(
 
     @Column(name = "width")
     private var width: Int,
+
+    @Column(name = "thickness")
+    private var thickness: Int,
 
     @Column(name = "quantity")
     private var quantity: Int,
