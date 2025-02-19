@@ -17,9 +17,6 @@ class Processing(
     @JoinColumn(name = "task_request_id")
     private var taskRequest: TaskRequest,
 
-    @Column(name = "vendor_id")
-    private var vendorId: Long,
-
     @Column(name = "task_type")
     private var taskType: String,
 
@@ -32,6 +29,9 @@ class Processing(
     @Column(name = "due_date")
     private var dueDate: LocalDate,
 
+    @Column(name = "vendor_id")
+    private var vendorId: Long,
+
     @Column(name = "perforation")
     private var perforation: String,
 
@@ -42,7 +42,7 @@ class Processing(
     private var notch: String,
 
     @Column(name = "plain_box")
-    private var plain_box: String,
+    private var plainBox: String,
 
     @Column(name = "round")
     private var round: String,
@@ -54,7 +54,7 @@ class Processing(
     private var stand: String,
 
     @Column(name = "opening_direction")
-    private var opening_direction: String,
+    private var openingDirection: String
 ) {
 
 }

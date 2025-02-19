@@ -17,14 +17,14 @@ class Lamination(
     @JoinColumn(name = "task_request_id")
     private var taskRequest: TaskRequest,
 
-    @Column(name = "vendor_id")
-    private var vendorId: Long,
-
     @Column(name = "sequence")
     private var sequence: Int,
 
-    @Column(name = "lamination_type")
-    private var laminationType: String,
+    @Column(name = "task_name")
+    private var taskName: String,
+
+    @Column(name = "task_type")
+    private var taskType: String,
 
     @Column(name = "quantity")
     private var quantity: Int,

@@ -17,14 +17,17 @@ class Details(
     @JoinColumn(name = "task_request_id")
     private var taskRequest: TaskRequest,
 
-    @Column(name = "code_id")
-    private var codeId: Long,
+    @Column(name = "order_date")
+    private val orderDate: LocalDate,
 
     @Column(name = "product_name")
     private var productName: String,
 
     @Column(name = "product_type")
     private var productType: String,
+
+    @Column(name = "due_date")
+    private var dueDate: LocalDate,
 
     @Column(name = "standard")
     private var standard: Int,
@@ -35,12 +38,6 @@ class Details(
     @Column(name = "thickness")
     private var thickness: Int,
 
-    @Column(name = "order_date")
-    private val orderDate: LocalDate,
-
-    @Column(name = "due_date")
-    private var dueDate: LocalDate,
-
     @Column(name = "sheets_count")
     private var sheetsCount: Int,
 
@@ -48,7 +45,10 @@ class Details(
     private var meter: Int,
 
     @Column(name = "rolls_count")
-    private var rollsCount: Int
+    private var rollsCount: Int,
+
+    @Column(name = "vendor_id")
+    private var vendorId: Long
 ) {
     init {
         validate()

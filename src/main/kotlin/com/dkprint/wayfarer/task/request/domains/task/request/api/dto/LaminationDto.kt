@@ -1,0 +1,12 @@
+package com.dkprint.wayfarer.task.request.domains.task.request.api.dto
+
+import java.time.LocalDate
+
+class LaminationDto(
+    val sequence: Int,
+    val taskName: String,
+    val taskType: String,
+    val quantity: Int,
+    val comment: String,
+    val dueDate: LocalDate
+)

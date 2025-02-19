@@ -18,9 +18,6 @@ class Printing(
     @JoinColumn(name = "task_request_id")
     private var taskRequest: TaskRequest,
 
-    @Column(name = "copperplate_id")
-    private var copperplateId: Long,
-
     @Column(name = "number_of_inks")
     private var numberOfInks: String,
 
@@ -40,7 +37,10 @@ class Printing(
     private var supervisionDate: LocalDateTime,
 
     @Column(name = "printing_direction")
-    private var printingDirection: Int
+    private var printingDirection: Int,
+
+    @Column(name = "copperplate_id")
+    private var copperplateId: Long
 ) {
     init {
         validate()

@@ -17,9 +17,6 @@ class Etc(
     @JoinColumn(name = "task_request_id")
     var taskRequest: TaskRequest,
 
-    @Column(name = "vendor_id")
-    private var vendorId: Long,
-
     @Column(name = "task_name")
     private var taskName: String,
 
@@ -32,8 +29,11 @@ class Etc(
     @Column(name = "due_date")
     private var dueDate: LocalDate,
 
+    @Column(name = "vendor_id")
+    private var vendorId: Long,
+
     @Column(name = "etc_type")
-    private var etcType: Boolean,
+    private var etcType: Boolean
 ) {
     init {
         validate()
