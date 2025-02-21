@@ -30,20 +30,4 @@ class Slitting(
 
     @Column(name = "vendor_id")
     private var vendorId: Long
-) {
-    init {
-        validate()
-    }
-
-    private fun validate() {
-        require(slittingWidth > 0) {
-            "너비는 0보다 커야 합니다."
-        }
-        require(slittingHeight > 0) {
-            "높이는 0보다 커야 합니다."
-        }
-        require(dueDate.isAfter(LocalDate.now())) {
-            "납기일은 현재 날짜 이후여야 합니다."
-        }
-    }
-}
+)

@@ -48,29 +48,4 @@ class Details(
 
     @Column(name = "vendor_id")
     private var vendorId: Long
-) {
-    init {
-        validate()
-    }
-
-    private fun validate() {
-        require(width > 0) {
-            "너비는 0보다 커야 합니다."
-        }
-        require(thickness > 0) {
-            "두께는 0보다 커야 합니다."
-        }
-        require(sheetsCount > 0) {
-            "예상 수량은 0보다 많아야 합니다."
-        }
-        require(meter > 0) {
-            "예상 길이는 0보다 커야 합니다."
-        }
-        require(rollsCount > 0) {
-            "롤 수는 0보다 많아야 합니다."
-        }
-        require(orderDate.isBefore(dueDate)) {
-            "발주일은 납기일 이전이어야 합니다."
-        }
-    }
-}
+)

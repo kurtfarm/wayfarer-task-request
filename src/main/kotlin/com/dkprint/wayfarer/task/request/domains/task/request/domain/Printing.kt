@@ -40,20 +40,4 @@ class Printing(
 
     @Column(name = "copperplate_id")
     private var copperplateId: Long
-) {
-    init {
-        validate()
-    }
-
-    private fun validate() {
-        require(width > 0) {
-            "너비는 0보다 커야 합니다."
-        }
-        require(height > 0) {
-            "높이는 0보다 커야 합니다."
-        }
-        require(dueDate.isAfter(LocalDate.now())) {
-            "납기일은 현재 날짜 이후여야 합니다."
-        }
-    }
-}
+)
