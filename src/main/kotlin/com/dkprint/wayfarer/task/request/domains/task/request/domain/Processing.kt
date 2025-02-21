@@ -54,6 +54,4 @@ class Processing(
 
     @Column(name = "opening_direction")
     private var openingDirection: String
-) {
-
-}
+)

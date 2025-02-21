@@ -33,15 +33,4 @@ class Etc(
 
     @Column(name = "etc_type")
     private var etcType: Boolean
-) {
-    init {
-        validate()
-    }
-
-    private fun validate() {
-        require(taskName.isNotBlank()) { "작업명은 비어 있을 수 없습니다." }
-        require(taskType.isNotBlank()) { "작업 구분은 비어 있을 수 없습니다." }
-        require(quantity > 0) { "수량은 0보다 커야 합니다." }
-        require(dueDate.isAfter(LocalDate.now())) { "납기일은 오늘 이후여야 합니다." }
-    }
-}
+)

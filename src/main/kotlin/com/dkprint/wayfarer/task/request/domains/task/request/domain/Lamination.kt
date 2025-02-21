@@ -33,20 +33,4 @@ class Lamination(
 
     @Column(name = "due_date")
     private var dueDate: LocalDate
-) {
-    init {
-        validate()
-    }
-
-    private fun validate() {
-        require(sequence > 0) {
-            "작업순서는 0보다 커야 합니다."
-        }
-        require(quantity > 0) {
-            "수량은 0보다 커야 합니다."
-        }
-        require(dueDate.isAfter(LocalDate.now())) {
-            "납기일은 현재 날짜 이후여야 합니다."
-        }
-    }
-}
+)
