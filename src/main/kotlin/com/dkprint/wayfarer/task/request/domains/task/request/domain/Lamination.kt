@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
+import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.LaminationDto
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -30,4 +31,21 @@ class Lamination(
 
     @Column(name = "due_date")
     var dueDate: LocalDate,
-)
+) {
+    companion object {
+        fun of(
+            taskRequestId: Long,
+            laminationDto: LaminationDto,
+        ): Lamination {
+            return Lamination(
+                taskRequestId = taskRequestId,
+                sequence = laminationDto.sequence,
+                taskName = laminationDto.taskName,
+                taskType = laminationDto.taskType,
+                quantity = laminationDto.quantity,
+                comment = laminationDto.comment,
+                dueDate = laminationDto.dueDate,
+            )
+        }
+    }
+}

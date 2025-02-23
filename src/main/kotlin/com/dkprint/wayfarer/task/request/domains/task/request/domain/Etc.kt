@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
+import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.EtcDto
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -26,8 +27,26 @@ class Etc(
     var dueDate: LocalDate,
 
     @Column(name = "vendor_id")
-    var vendorId: Long,
+    var vendorId: Long = 0L,
 
     @Column(name = "etc_type")
     var etcType: Boolean,
-)
+) {
+    companion object {
+        fun of(
+            taskRequestId: Long,
+            vendorId: Long,
+            etcDto: EtcDto,
+        ): Etc {
+            return Etc(
+                taskRequestId = taskRequestId,
+                taskName = etcDto.taskName,
+                taskType = etcDto.taskType,
+                quantity = etcDto.quantity,
+                dueDate = etcDto.dueDate,
+                vendorId = vendorId,
+                etcType = etcDto.etcType,
+            )
+        }
+    }
+}

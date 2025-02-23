@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
+import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.DetailsDto
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -38,6 +39,7 @@ class Details(
     var expectedRollsCount: Int,
 
     @Column(name = "vendor_id")
+
     var vendorId: Long,
 
     @Column(name = "order_date")
@@ -45,4 +47,26 @@ class Details(
 
     @Column(name = "due_date")
     var dueDate: LocalDate,
-)
+) {
+    companion object {
+        fun of(
+            taskRequestId: Long,
+            detailsDto: DetailsDto
+        ): Details {
+            return Details(
+                taskRequestId = taskRequestId,
+                orderDate = detailsDto.orderDate,
+                productName = detailsDto.productName,
+                productType = detailsDto.productType,
+                dueDate = detailsDto.dueDate,
+                standardWidth = detailsDto.standardWidth,
+                standardLength = detailsDto.standardLength,
+                standardThickness = detailsDto.standardThickness,
+                expectedQuantity = detailsDto.expectedQuantity,
+                expectedMeter = detailsDto.expectedMeter,
+                expectedRollsCount = detailsDto.expectedRollsCount,
+                vendorId = 0L,
+            )
+        }
+    }
+}

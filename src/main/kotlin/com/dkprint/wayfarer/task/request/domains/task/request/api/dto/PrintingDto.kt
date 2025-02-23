@@ -11,6 +11,6 @@ data class PrintingDto(
     val printingType: String,
     val supervisionDatetime: LocalDateTime,
     val printingDirection: Int,
-    val copperplateId: Long,
+    val copperplateName: String,
     val isMatte: Boolean,
 )

@@ -7,7 +7,7 @@ data class ProcessingDto(
     val quantity: Int,
     val side: String,
     val dueDate: LocalDate,
-    val vendorName: Long,
+    val vendorName: String,
     val perforation: String,
     val upperPart: String,
     val notch: String,
