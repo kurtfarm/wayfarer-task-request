@@ -15,7 +15,7 @@ class TaskRequest(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    var id: Long = 0L,
+    val id: Long = 0L,
 
     @Column(name = "is_print")
     var isPrint: Boolean = false,

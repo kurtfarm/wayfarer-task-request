@@ -13,7 +13,7 @@ class FabricMapping(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    var id: Long = 0L,
+    val id: Long = 0L,
 
     @Column(name = "task_request_id")
     var taskRequestId: Long = 0L,

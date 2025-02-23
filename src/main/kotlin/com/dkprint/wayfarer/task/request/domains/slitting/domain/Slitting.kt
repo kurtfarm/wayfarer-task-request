@@ -12,7 +12,7 @@ import java.time.LocalDate
 class Slitting(
     @Id
     @Column(name = "task_request_id")
-    var taskRequestId: Long,
+    val taskRequestId: Long,
 
     @Column(name = "slitting_width")
     var slittingWidth: Int,
