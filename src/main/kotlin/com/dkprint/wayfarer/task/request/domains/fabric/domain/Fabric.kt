@@ -15,7 +15,7 @@ class Fabric(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    var id: Long = 0L,
+    val id: Long = 0L,
 
     @Column(name = "code_id")
     var codeId: Long = 0L,

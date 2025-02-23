@@ -12,7 +12,7 @@ import java.time.LocalDate
 class Details(
     @Id
     @Column(name = "task_request_id")
-    var taskRequestId: Long,
+    val taskRequestId: Long,
 
     @Column(name = "product_name")
     var productName: String,

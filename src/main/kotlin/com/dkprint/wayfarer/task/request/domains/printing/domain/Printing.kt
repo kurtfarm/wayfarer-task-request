@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 class Printing(
     @Id
     @Column(name = "task_request_id")
-    var taskRequestId: Long,
+    val taskRequestId: Long,
 
     @Column(name = "number_of_inks")
     var numberOfInks: String,

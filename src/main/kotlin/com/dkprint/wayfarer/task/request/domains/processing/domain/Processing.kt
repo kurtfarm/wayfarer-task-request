@@ -12,7 +12,7 @@ import java.time.LocalDate
 class Processing(
     @Id
     @Column(name = "task_request_id")
-    var taskRequestId: Long,
+    val taskRequestId: Long,
 
     @Column(name = "task_type")
     var taskType: String,
