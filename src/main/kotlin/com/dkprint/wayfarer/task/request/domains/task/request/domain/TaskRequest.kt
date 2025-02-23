@@ -1,6 +1,6 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
-import com.dkprint.wayfarer.task.request.domains.model.BaseEntity
+import com.dkprint.wayfarer.task.request.domains.common.BaseTimeEntity
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestDto
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -58,7 +58,7 @@ class TaskRequest(
 
     @Column(name = "processing_comment")
     var processingComment: String? = null,
-) : BaseEntity() {
+) : BaseTimeEntity() {
     companion object {
         fun from(
             taskRequestDto: TaskRequestDto,

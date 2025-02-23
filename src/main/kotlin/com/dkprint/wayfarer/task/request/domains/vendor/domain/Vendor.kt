@@ -1,6 +1,6 @@
 package com.dkprint.wayfarer.task.request.domains.vendor.domain
 
-import com.dkprint.wayfarer.task.request.domains.model.BaseEntity
+import com.dkprint.wayfarer.task.request.domains.common.BaseTimeEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -33,4 +33,4 @@ class Vendor(
 
     @Column(name = "comment")
     var comment: String,
-) : BaseEntity()
+) : BaseTimeEntity()
