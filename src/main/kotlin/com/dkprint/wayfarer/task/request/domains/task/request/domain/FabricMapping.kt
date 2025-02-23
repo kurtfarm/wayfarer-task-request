@@ -9,7 +9,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "task_request_material_fabric_mapping")
-class TaskRequestFabricMapping(
+class FabricMapping(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -22,5 +22,19 @@ class TaskRequestFabricMapping(
     var fabricId: Long = 0L,
 
     @Column(name = "fabric_class")
-    var fabricClass: Int,
-)
+    var fabricClass: Int = 0,
+) {
+    companion object {
+        fun of(
+            taskRequestId: Long,
+            fabricId: Long,
+            fabricClass: Int,
+        ): FabricMapping {
+            return FabricMapping(
+                taskRequestId = taskRequestId,
+                fabricId = fabricId,
+                fabricClass = fabricClass,
+            )
+        }
+    }
+}

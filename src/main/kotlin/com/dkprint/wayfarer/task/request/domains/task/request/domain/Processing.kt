@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
+import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.ProcessingDto
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -26,7 +27,7 @@ class Processing(
     var dueDate: LocalDate,
 
     @Column(name = "vendor_id")
-    var vendorId: Long,
+    var vendorId: Long = 0L,
 
     @Column(name = "perforation")
     var perforation: String,
@@ -51,4 +52,29 @@ class Processing(
 
     @Column(name = "opening_direction")
     var openingDirection: String,
-)
+) {
+    companion object {
+        fun of(
+            taskRequestId: Long,
+            vendorId: Long,
+            processingDto: ProcessingDto,
+        ): Processing {
+            return Processing(
+                taskRequestId = taskRequestId,
+                taskType = processingDto.taskType,
+                quantity = processingDto.quantity,
+                side = processingDto.side,
+                dueDate = processingDto.dueDate,
+                vendorId = vendorId,
+                perforation = processingDto.perforation,
+                upperPart = processingDto.upperPart,
+                notch = processingDto.notch,
+                plainBox = processingDto.plainBox,
+                round = processingDto.round,
+                zipper = processingDto.zipper,
+                stand = processingDto.stand,
+                openingDirection = processingDto.openingDirection,
+            )
+        }
+    }
+}

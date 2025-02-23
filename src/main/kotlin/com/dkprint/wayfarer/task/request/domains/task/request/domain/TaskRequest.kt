@@ -1,6 +1,7 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
 import com.dkprint.wayfarer.task.request.domains.model.BaseEntity
+import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestDto
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -57,4 +58,28 @@ class TaskRequest(
 
     @Column(name = "processing_comment")
     var processingComment: String? = null,
-) : BaseEntity()
+) : BaseEntity() {
+    companion object {
+        fun from(
+            taskRequestDto: TaskRequestDto,
+        ): TaskRequest {
+            return TaskRequest(
+                isPrint = taskRequestDto.isPrint,
+                isLamination = taskRequestDto.isLamination,
+                isProcessing = taskRequestDto.isProcessing,
+                isSlitting = taskRequestDto.isSlitting,
+                isEtc1 = taskRequestDto.isEtc1,
+                isEtc2 = taskRequestDto.isEtc2,
+
+                generalComment = taskRequestDto.generalComment,
+                fabricComment = taskRequestDto.fabricComment,
+                printingComment = taskRequestDto.printingComment,
+                laminationComment = taskRequestDto.laminationComment,
+                slittingComment = taskRequestDto.slittingComment,
+                etc1Comment = taskRequestDto.etc1Comment,
+                etc2Comment = taskRequestDto.etc2Comment,
+                processingComment = taskRequestDto.processingComment,
+            )
+        }
+    }
+}

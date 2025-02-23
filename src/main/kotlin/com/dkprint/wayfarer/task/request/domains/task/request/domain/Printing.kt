@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
+import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.PrintingDto
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -17,11 +18,11 @@ class Printing(
     @Column(name = "number_of_inks")
     var numberOfInks: String,
 
-    @Column(name = "standard_width")
-    var standardWidth: Int,
+    @Column(name = "copperplate_width")
+    var copperplateWidth: Int,
 
-    @Column(name = "standard_length")
-    var standardLength: Int,
+    @Column(name = "copperplate_length")
+    var copperplateLength: Int,
 
     @Column(name = "due_date")
     var dueDate: LocalDate,
@@ -40,4 +41,25 @@ class Printing(
 
     @Column(name = "is_matte")
     var isMatte: Boolean,
-)
+) {
+    companion object {
+        fun of(
+            taskRequestId: Long,
+            copperplateId: Long,
+            printingDto: PrintingDto,
+        ): Printing {
+            return Printing(
+                taskRequestId = taskRequestId,
+                numberOfInks = printingDto.numberOfInks,
+                copperplateWidth = printingDto.copperplateWidth,
+                copperplateLength = printingDto.copperplateLength,
+                dueDate = printingDto.dueDate,
+                printingType = printingDto.printingType,
+                supervisionDatetime = printingDto.supervisionDatetime,
+                printingDirection = printingDto.printingDirection,
+                copperplateId = copperplateId,
+                isMatte = printingDto.isMatte,
+            )
+        }
+    }
+}

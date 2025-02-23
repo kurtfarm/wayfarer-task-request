@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
+import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.SlittingDto
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -16,8 +17,8 @@ class Slitting(
     @Column(name = "slitting_width")
     var slittingWidth: Int,
 
-    @Column(name = "slitting_height")
-    var slittingHeight: Int,
+    @Column(name = "slitting_length")
+    var slittingLength: Int,
 
     @Column(name = "quantity")
     var quantity: Long,
@@ -26,5 +27,22 @@ class Slitting(
     var dueDate: LocalDate,
 
     @Column(name = "vendor_id")
-    var vendorId: Long,
-)
+    var vendorId: Long = 0L,
+) {
+    companion object {
+        fun of(
+            taskRequestId: Long,
+            vendorId: Long,
+            slittingDto: SlittingDto,
+        ): Slitting {
+            return Slitting(
+                taskRequestId = taskRequestId,
+                slittingWidth = slittingDto.slittingWidth,
+                slittingLength = slittingDto.slittingLength,
+                quantity = slittingDto.quantity,
+                dueDate = slittingDto.dueDate,
+                vendorId = vendorId,
+            )
+        }
+    }
+}

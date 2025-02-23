@@ -18,7 +18,7 @@ class Fabric(
     var id: Long = 0L,
 
     @Column(name = "code_id")
-    var codeId: Long,
+    var codeId: Long = 0L,
 
     @Column(name = "expected_arrival_date")
     var expectedArrivalDate: LocalDate,
@@ -27,10 +27,10 @@ class Fabric(
     var fabricType: String,
 
     @Column(name = "orderer_id")
-    var ordererId: Long,
+    var ordererId: Long = 0L,
 
     @Column(name = "customer_id")
-    var customerId: Long,
+    var customerId: Long = 0L,
 
     @Column(name = "fabric_class")
     var fabricClass: String,
@@ -48,8 +48,9 @@ class Fabric(
     var quantity: Int,
 
     @Column(name = "comment")
-    var comment: String,
+    var comment: String? = null,
 
     @Column(name = "receiving_status")
-    var receivingStatus: Boolean,
+    var receivingStatus: Boolean = false,
 ) : BaseEntity()
+
