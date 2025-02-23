@@ -3,8 +3,6 @@ package com.dkprint.wayfarer.task.request.domains.task.request.domain
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDate
 
@@ -12,46 +10,45 @@ import java.time.LocalDate
 @Table(name = "task_request_processing")
 class Processing(
     @Id
-    @OneToOne
-    @JoinColumn(name = "task_request_id")
-    private var taskRequest: TaskRequest,
+    @Column(name = "task_request_id")
+    var taskRequestId: Long,
 
     @Column(name = "task_type")
-    private var taskType: String,
+    var taskType: String,
 
     @Column(name = "quantity")
-    private var quantity: Int,
+    var quantity: Int,
 
     @Column(name = "side")
-    private var side: String,
+    var side: String,
 
     @Column(name = "due_date")
-    private var dueDate: LocalDate,
+    var dueDate: LocalDate,
 
     @Column(name = "vendor_id")
-    private var vendorId: Long,
+    var vendorId: Long,
 
     @Column(name = "perforation")
-    private var perforation: String,
+    var perforation: String,
 
     @Column(name = "upper_part")
-    private var upperPart: String,
+    var upperPart: String,
 
     @Column(name = "notch")
-    private var notch: String,
+    var notch: String,
 
     @Column(name = "plain_box")
-    private var plainBox: String,
+    var plainBox: String,
 
     @Column(name = "round")
-    private var round: String,
+    var round: String,
 
     @Column(name = "zipper")
-    private var zipper: String,
+    var zipper: String,
 
     @Column(name = "stand")
-    private var stand: String,
+    var stand: String,
 
     @Column(name = "opening_direction")
-    private var openingDirection: String
+    var openingDirection: String,
 )

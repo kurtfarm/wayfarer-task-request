@@ -3,13 +3,14 @@ package com.dkprint.wayfarer.task.request.domains.task.request.api.dto
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class PrintingDto(
+data class PrintingDto(
     val numberOfInks: String,
-    val width: Int,
-    val height: Int,
+    val copperplateWidth: Int,
+    val copperplateLength: Int,
     val dueDate: LocalDate,
     val printingType: String,
-    val supervisionDate: LocalDateTime,
+    val supervisionDatetime: LocalDateTime,
     val printingDirection: Int,
-    val copperplateId: Long
+    val copperplateId: Long,
+    val isMatte: Boolean,
 )

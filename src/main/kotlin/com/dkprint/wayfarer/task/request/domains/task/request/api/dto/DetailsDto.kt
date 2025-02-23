@@ -2,16 +2,16 @@ package com.dkprint.wayfarer.task.request.domains.task.request.api.dto
 
 import java.time.LocalDate
 
-class DetailsDto(
-    val orderDate: LocalDate,
+data class DetailsDto(
     val productName: String,
     val productType: String,
+    val standardWidth: Int,
+    val standardLength: Int,
+    val standardThickness: Int,
+    val expectedQuantity: Int,
+    val expectedMeter: Int,
+    val expectedRollsCount: Int,
+    val vendorName: String,
+    val orderDate: LocalDate,
     val dueDate: LocalDate,
-    val standard: Int,
-    val width: Int,
-    val thickness: Int,
-    val sheetsCount: Int,
-    val meter: Int,
-    val rollsCount: Int,
-    val vendorName: String
 )

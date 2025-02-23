@@ -3,8 +3,6 @@ package com.dkprint.wayfarer.task.request.domains.task.request.domain
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDate
 
@@ -12,40 +10,39 @@ import java.time.LocalDate
 @Table(name = "task_request_details")
 class Details(
     @Id
-    @OneToOne
-    @JoinColumn(name = "task_request_id")
-    private var taskRequest: TaskRequest,
-
-    @Column(name = "order_date")
-    private val orderDate: LocalDate,
+    @Column(name = "task_request_id")
+    var taskRequestId: Long,
 
     @Column(name = "product_name")
-    private var productName: String,
+    var productName: String,
 
     @Column(name = "product_type")
-    private var productType: String,
+    var productType: String,
 
-    @Column(name = "due_date")
-    private var dueDate: LocalDate,
+    @Column(name = "standard_width")
+    var standardWidth: Int,
 
-    @Column(name = "standard")
-    private var standard: Int,
+    @Column(name = "standard_length")
+    var standardLength: Int,
 
-    @Column(name = "width")
-    private var width: Int,
+    @Column(name = "standard_thickness")
+    var standardThickness: Int,
 
-    @Column(name = "thickness")
-    private var thickness: Int,
-
-    @Column(name = "sheets_count")
-    private var sheetsCount: Int,
+    @Column(name = "quantity")
+    var expectedQuantity: Int,
 
     @Column(name = "meter")
-    private var meter: Int,
+    var expectedMeter: Int,
 
-    @Column(name = "rolls_count")
-    private var rollsCount: Int,
+    @Column(name = "expected_rolls_count")
+    var expectedRollsCount: Int,
 
     @Column(name = "vendor_id")
-    private var vendorId: Long
+    var vendorId: Long,
+
+    @Column(name = "order_date")
+    var orderDate: LocalDate = LocalDate.now(),
+
+    @Column(name = "due_date")
+    var dueDate: LocalDate,
 )
