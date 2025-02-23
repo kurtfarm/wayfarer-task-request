@@ -2,7 +2,7 @@ package com.dkprint.wayfarer.task.request.domains.task.request.api.dto
 
 import java.time.LocalDate
 
-class ProcessingDto(
+data class ProcessingDto(
     val taskType: String,
     val quantity: Int,
     val side: String,
@@ -15,5 +15,5 @@ class ProcessingDto(
     val round: String,
     val zipper: String,
     val stand: String,
-    val openingDirection: String
+    val openingDirection: String,
 )

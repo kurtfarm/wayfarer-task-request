@@ -3,8 +3,6 @@ package com.dkprint.wayfarer.task.request.domains.task.request.domain
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -13,31 +11,33 @@ import java.time.LocalDateTime
 @Table(name = "task_request_printing")
 class Printing(
     @Id
-    @OneToOne
-    @JoinColumn(name = "task_request_id")
-    private var taskRequest: TaskRequest,
+    @Column(name = "task_request_id")
+    var taskRequestId: Long,
 
     @Column(name = "number_of_inks")
-    private var numberOfInks: String,
+    var numberOfInks: String,
 
-    @Column(name = "width")
-    private var width: Int,
+    @Column(name = "standard_width")
+    var standardWidth: Int,
 
-    @Column(name = "height")
-    private var height: Int,
+    @Column(name = "standard_length")
+    var standardLength: Int,
 
     @Column(name = "due_date")
-    private var dueDate: LocalDate,
+    var dueDate: LocalDate,
 
     @Column(name = "printing_type")
-    private var printingType: String,
+    var printingType: String,
 
-    @Column(name = "supervision_date")
-    private var supervisionDate: LocalDateTime,
+    @Column(name = "supervision_datetime")
+    var supervisionDatetime: LocalDateTime,
 
     @Column(name = "printing_direction")
-    private var printingDirection: Int,
+    var printingDirection: Int,
 
     @Column(name = "copperplate_id")
-    private var copperplateId: Long
+    var copperplateId: Long,
+
+    @Column(name = "is_matte")
+    var isMatte: Boolean,
 )

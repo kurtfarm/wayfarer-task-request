@@ -10,12 +10,12 @@ import org.hibernate.annotations.UpdateTimestamp
 abstract class BaseEntity {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private lateinit var createdAt: LocalDateTime
+    lateinit var createdAt: LocalDateTime
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private lateinit var updatedAt: LocalDateTime
+    lateinit var updatedAt: LocalDateTime
 
     @Column(name = "is_deleted")
-    private var isDeleted: Boolean = false
+    var isDeleted: Boolean = false
 }
