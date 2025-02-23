@@ -1,6 +1,6 @@
 package com.dkprint.wayfarer.task.request.domains.copperplate.domain
 
-import com.dkprint.wayfarer.task.request.domains.model.BaseEntity
+import com.dkprint.wayfarer.task.request.domains.common.BaseTimeEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -45,5 +45,5 @@ class Copperplate(
 
     @Column(name = "general_comment")
     var generalComment: String,
-) : BaseEntity()
+) : BaseTimeEntity()
 
