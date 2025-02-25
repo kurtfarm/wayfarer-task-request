@@ -1,7 +1,8 @@
 package com.dkprint.wayfarer.task.request.domains.common.application
 
-import com.dkprint.wayfarer.task.request.global.exception.MinIOClientException
-import com.dkprint.wayfarer.task.request.global.exception.MinIOServerException
+import com.dkprint.wayfarer.task.request.global.exception.MinioClientException
+import com.dkprint.wayfarer.task.request.global.exception.MinioServerException
+import com.dkprint.wayfarer.task.request.infrastructure.`object`.storage.ObjectStorageService
 import io.minio.BucketExistsArgs
 import io.minio.GetPresignedObjectUrlArgs
 import io.minio.MakeBucketArgs
@@ -20,14 +21,14 @@ class MinioService(
 
     @Value("\${minio.bucketName}")
     private val bucketName: String,
-) {
+) : ObjectStorageService {
     fun checkBucket() {
         if (!isBucketExists(bucketName)) {
             createBucket(bucketName)
         }
     }
 
-    fun upload(id: Long, productName: String, printDesigns: List<MultipartFile>) {
+    override fun upload(id: Long, productName: String, printDesigns: List<MultipartFile>) {
         printDesigns.forEachIndexed { index, printDesign ->
             val fileName = "$id/$index-$productName/${printDesign.originalFilename}"
             try {
@@ -40,14 +41,14 @@ class MinioService(
                         .build()
                 )
             } catch (e: ErrorResponseException) {
-                throw MinIOServerException("MinIO Server Exception: ${e.message}")
+                throw MinioServerException("MinIO Server Exception: ${e.message}")
             } catch (e: MinioException) {
-                throw MinIOClientException("MinIO Client Exception: ${e.message}")
+                throw MinioClientException("MinIO Client Exception: ${e.message}")
             }
         }
     }
 
-    fun generatePreSignedUrl(id: Long, productName: String, printDesigns: List<MultipartFile>): List<String> {
+    override fun generatePreSignedUrl(id: Long, productName: String, printDesigns: List<MultipartFile>): List<String> {
         val urls: MutableList<String> = mutableListOf()
 
         printDesigns.forEachIndexed { index, printDesign ->

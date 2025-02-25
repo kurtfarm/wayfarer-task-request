@@ -1,4 +1,4 @@
-package com.dkprint.wayfarer.task.request.global.config
+package com.dkprint.wayfarer.task.request.global.configuration
 
 import io.minio.MinioClient
 import org.springframework.beans.factory.annotation.Value
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class MinioConfig(
+class MinioConfiguration(
     @Value("\${minio.endpoint}")
     private val endpoint: String,
 
