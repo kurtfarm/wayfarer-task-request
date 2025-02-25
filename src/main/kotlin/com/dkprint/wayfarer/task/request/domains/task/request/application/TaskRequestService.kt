@@ -1,38 +1,42 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.application
 
+import com.dkprint.wayfarer.task.request.domains.common.application.MinioService
+import com.dkprint.wayfarer.task.request.domains.copperplate.dao.CopperplateRepository
 import com.dkprint.wayfarer.task.request.domains.copperplate.domain.Copperplate
-import com.dkprint.wayfarer.task.request.domains.fabric.domain.Fabric
+import com.dkprint.wayfarer.task.request.domains.details.dao.DetailsRepository
+import com.dkprint.wayfarer.task.request.domains.details.domain.Details
 import com.dkprint.wayfarer.task.request.domains.details.dto.DetailsDto
+import com.dkprint.wayfarer.task.request.domains.etc.dao.EtcRepository
+import com.dkprint.wayfarer.task.request.domains.etc.domain.Etc
 import com.dkprint.wayfarer.task.request.domains.etc.dto.EtcDto
+import com.dkprint.wayfarer.task.request.domains.fabric.dao.FabricRepository
+import com.dkprint.wayfarer.task.request.domains.fabric.domain.Fabric
+import com.dkprint.wayfarer.task.request.domains.fabric.mapping.dao.FabricMappingRepository
+import com.dkprint.wayfarer.task.request.domains.fabric.mapping.domain.FabricMapping
 import com.dkprint.wayfarer.task.request.domains.fabric.mapping.dto.FabricDto
+import com.dkprint.wayfarer.task.request.domains.lamination.dao.LaminationRepository
+import com.dkprint.wayfarer.task.request.domains.lamination.domain.Lamination
 import com.dkprint.wayfarer.task.request.domains.lamination.dto.LaminationDto
+import com.dkprint.wayfarer.task.request.domains.print.design.dao.PrintDesignRepository
+import com.dkprint.wayfarer.task.request.domains.print.design.domain.PrintDesign
+import com.dkprint.wayfarer.task.request.domains.printing.dao.PrintingRepository
+import com.dkprint.wayfarer.task.request.domains.printing.domain.Printing
 import com.dkprint.wayfarer.task.request.domains.printing.dto.PrintingDto
+import com.dkprint.wayfarer.task.request.domains.processing.dao.ProcessingRepository
+import com.dkprint.wayfarer.task.request.domains.processing.domain.Processing
 import com.dkprint.wayfarer.task.request.domains.processing.dto.ProcessingDto
+import com.dkprint.wayfarer.task.request.domains.slitting.dao.SlittingRepository
+import com.dkprint.wayfarer.task.request.domains.slitting.domain.Slitting
 import com.dkprint.wayfarer.task.request.domains.slitting.dto.SlittingDto
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestDto
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestResponse
-import com.dkprint.wayfarer.task.request.domains.copperplate.dao.CopperplateRepository
-import com.dkprint.wayfarer.task.request.domains.details.dao.DetailsRepository
-import com.dkprint.wayfarer.task.request.domains.etc.dao.EtcRepository
-import com.dkprint.wayfarer.task.request.domains.fabric.mapping.dao.FabricMappingRepository
-import com.dkprint.wayfarer.task.request.domains.fabric.dao.FabricRepository
-import com.dkprint.wayfarer.task.request.domains.lamination.dao.LaminationRepository
-import com.dkprint.wayfarer.task.request.domains.printing.dao.PrintingRepository
-import com.dkprint.wayfarer.task.request.domains.processing.dao.ProcessingRepository
-import com.dkprint.wayfarer.task.request.domains.slitting.dao.SlittingRepository
 import com.dkprint.wayfarer.task.request.domains.task.request.dao.TaskRequestRepository
-import com.dkprint.wayfarer.task.request.domains.vendor.dao.VendorRepository
-import com.dkprint.wayfarer.task.request.domains.details.domain.Details
-import com.dkprint.wayfarer.task.request.domains.etc.domain.Etc
-import com.dkprint.wayfarer.task.request.domains.fabric.mapping.domain.FabricMapping
-import com.dkprint.wayfarer.task.request.domains.lamination.domain.Lamination
-import com.dkprint.wayfarer.task.request.domains.printing.domain.Printing
-import com.dkprint.wayfarer.task.request.domains.processing.domain.Processing
-import com.dkprint.wayfarer.task.request.domains.slitting.domain.Slitting
 import com.dkprint.wayfarer.task.request.domains.task.request.domain.TaskRequest
+import com.dkprint.wayfarer.task.request.domains.vendor.dao.VendorRepository
 import com.dkprint.wayfarer.task.request.domains.vendor.domain.Vendor
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class TaskRequestService(
@@ -44,36 +48,40 @@ class TaskRequestService(
     private val slittingRepository: SlittingRepository,
     private val etcRepository: EtcRepository,
     private val processingRepository: ProcessingRepository,
+    private val printDesignRepository: PrintDesignRepository,
 
     private val fabricRepository: FabricRepository,
     private val vendorRepository: VendorRepository,
     private val copperplateRepository: CopperplateRepository,
+
+    private val minioService: MinioService,
 ) {
     @Transactional
     fun create(taskRequestDto: TaskRequestDto): TaskRequestResponse {
         val savedTaskRequest: TaskRequest = createTaskRequest(taskRequestDto)
-        createDetails(savedTaskRequest.id, taskRequestDto.detailsDto)
-        createFabricMapping(savedTaskRequest.id, taskRequestDto.fabricDtos)
+        val taskRequestId: Long = savedTaskRequest.id
+        val productName: String = taskRequestDto.detailsDto.productName
 
-        taskRequestDto.printingDto?.let { createPrinting(savedTaskRequest.id, taskRequestDto.printingDto) }
-        taskRequestDto.laminationDtos?.let { createLamination(savedTaskRequest.id, taskRequestDto.laminationDtos) }
-        taskRequestDto.slittingDto?.let { createSlitting(savedTaskRequest.id, taskRequestDto.slittingDto) }
-        taskRequestDto.etc1Dto?.let { createEtc(savedTaskRequest.id, taskRequestDto.etc1Dto) }
-        taskRequestDto.etc2Dto?.let { createEtc(savedTaskRequest.id, taskRequestDto.etc2Dto) }
-        taskRequestDto.processingDto?.let { createProcessing(savedTaskRequest.id, taskRequestDto.processingDto) }
+        createDetails(taskRequestId, taskRequestDto.detailsDto)
+        createFabricMapping(taskRequestId, taskRequestDto.fabricDtos)
 
-        return TaskRequestResponse(
-            id = savedTaskRequest.id,
-            status = true,
-        )
+        with(taskRequestDto) {
+            printingDto?.let { createPrinting(taskRequestId, it) }
+            laminationDtos?.let { createLamination(taskRequestId, it) }
+            slittingDto?.let { createSlitting(taskRequestId, it) }
+            listOfNotNull(etc1Dto, etc2Dto).forEach { createEtc(taskRequestId, it) }
+            processingDto?.let { createProcessing(taskRequestId, it) }
+            printDesigns?.let { createPrintDesigns(taskRequestId, productName, it) }
+        }
+
+        return TaskRequestResponse(id = taskRequestId, status = true)
     }
 
     private fun createTaskRequest(
         taskRequestDto: TaskRequestDto,
     ): TaskRequest {
         val taskRequest: TaskRequest = TaskRequest.from(taskRequestDto)
-        val savedRequest: TaskRequest = taskRequestRepository.save(taskRequest)
-        return savedRequest
+        return taskRequestRepository.save(taskRequest)
     }
 
     private fun createDetails(
@@ -83,7 +91,6 @@ class TaskRequestService(
         val details: Details = Details.of(taskRequestId, detailsDto)
         detailsRepository.save(details)
     }
-
 
     private fun createFabricMapping(
         taskRequestId: Long,
@@ -144,5 +151,21 @@ class TaskRequestService(
             ?: throw IllegalArgumentException("거래처: ${processingDto.vendorName} 조회 오류")
         val processing: Processing = Processing.of(taskRequestId, vendor.id, processingDto)
         processingRepository.save(processing)
+    }
+
+    private fun createPrintDesigns(
+        id: Long,
+        productName: String,
+        printDesigns: List<MultipartFile>
+    ) {
+        minioService.checkBucket()
+        minioService.upload(id, productName, printDesigns)
+
+        val urls: List<String> = minioService.generatePreSignedUrl(id, productName, printDesigns)
+
+        urls.forEach { url ->
+            val printDesign: PrintDesign = PrintDesign(taskRequestId = id, printDesign = url)
+            printDesignRepository.save(printDesign)
+        }
     }
 }
