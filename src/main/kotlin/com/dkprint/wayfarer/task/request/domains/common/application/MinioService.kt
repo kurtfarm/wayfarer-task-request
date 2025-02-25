@@ -38,17 +38,20 @@ class MinioService(
     }
 
     fun generatePreSignedUrl(id: Long, productName: String, printDesigns: List<MultipartFile>): List<String> {
-        val urls: List<String> = mutableListOf()
+        val urls: MutableList<String> = mutableListOf()
 
         printDesigns.forEachIndexed { index, printDesign ->
-            val fileName = "$id/$index-$productName/${printDesign.originalFilename}"
-            minioClient.getPresignedObjectUrl(
+            val fileName: String = "$id/$index-$productName/${printDesign.originalFilename}"
+
+            val preSignedUrl: String = minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
                     .bucket(bucketName)
                     .`object`(fileName)
                     .method(Method.GET)
                     .build()
             )
+
+            urls.add(preSignedUrl)
         }
 
         return urls
