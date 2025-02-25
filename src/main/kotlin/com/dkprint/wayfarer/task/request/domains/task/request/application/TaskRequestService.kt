@@ -156,7 +156,7 @@ class TaskRequestService(
     private fun createPrintDesigns(
         id: Long,
         productName: String,
-        printDesigns: List<MultipartFile>
+        printDesigns: List<MultipartFile>,
     ) {
         minioService.checkBucket()
         minioService.upload(id, productName, printDesigns)
