@@ -1,6 +1,6 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
-import com.dkprint.wayfarer.task.request.domains.common.BaseTimeEntity
+import com.dkprint.wayfarer.task.request.domains.common.domain.BaseTimeEntity
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestDto
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

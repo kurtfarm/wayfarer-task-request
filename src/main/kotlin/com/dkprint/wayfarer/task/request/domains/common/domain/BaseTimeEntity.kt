@@ -1,4 +1,4 @@
-package com.dkprint.wayfarer.task.request.domains.common
+package com.dkprint.wayfarer.task.request.domains.common.domain
 
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass

@@ -35,5 +35,5 @@ data class TaskRequestDto(
     val etc2Dto: EtcDto?,
     val processingDto: ProcessingDto?,
 
-    val printDesigns: List<MultipartFile>
+    val printDesigns: List<MultipartFile>?,
 )
