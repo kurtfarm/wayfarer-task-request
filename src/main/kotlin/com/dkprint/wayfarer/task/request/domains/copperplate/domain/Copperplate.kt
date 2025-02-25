@@ -34,8 +34,11 @@ class Copperplate(
     @Column(name = "comment")
     var comment: String? = null,
 
-    @Column(name = "copperplate_circumference")
+    @Column(name = "location")
     var location: String,
+
+    @Column(name = "copperplate_circumference")
+    var copperplateCircumference: String,
 
     @Column(name = "copperplate_length")
     var copperplateLength: String,
