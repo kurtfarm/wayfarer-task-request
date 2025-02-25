@@ -1,10 +1,14 @@
 package com.dkprint.wayfarer.task.request.domains.common.application
 
+import com.dkprint.wayfarer.task.request.global.exception.MinIOClientException
+import com.dkprint.wayfarer.task.request.global.exception.MinIOServerException
 import io.minio.BucketExistsArgs
 import io.minio.GetPresignedObjectUrlArgs
 import io.minio.MakeBucketArgs
 import io.minio.MinioClient
 import io.minio.PutObjectArgs
+import io.minio.errors.ErrorResponseException
+import io.minio.errors.MinioException
 import io.minio.http.Method
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -26,14 +30,20 @@ class MinioService(
     fun upload(id: Long, productName: String, printDesigns: List<MultipartFile>) {
         printDesigns.forEachIndexed { index, printDesign ->
             val fileName = "$id/$index-$productName/${printDesign.originalFilename}"
-            minioClient.putObject(
-                PutObjectArgs.builder()
-                    .bucket(bucketName)
-                    .`object`(fileName)
-                    .stream(printDesign.inputStream, printDesign.size, -1)
-                    .contentType(printDesign.contentType)
-                    .build()
-            )
+            try {
+                minioClient.putObject(
+                    PutObjectArgs.builder()
+                        .bucket(bucketName)
+                        .`object`(fileName)
+                        .stream(printDesign.inputStream, printDesign.size, -1)
+                        .contentType(printDesign.contentType)
+                        .build()
+                )
+            } catch (e: ErrorResponseException) {
+                throw MinIOServerException("MinIO Server Exception: ${e.message}")
+            } catch (e: MinioException) {
+                throw MinIOClientException("MinIO Client Exception: ${e.message}")
+            }
         }
     }
 
