@@ -59,6 +59,14 @@ class TaskRequestService(
         return TaskRequestResponse(id = taskRequestId, status = true)
     }
 
+    @Transactional
+    fun delete(taskRequestNumber: Long) {
+        val taskRequest: TaskRequest = taskRequestRepository.findByTaskRequestNumber(taskRequestNumber)
+            ?: throw IllegalArgumentException("작업 의뢰서 번호: $taskRequestNumber 조회 오류")
+
+        taskRequest.isDeleted = true
+    }
+
     private fun save(
         taskRequestId: Long,
         taskRequestDto: TaskRequestDto,
