@@ -49,8 +49,5 @@ class Fabric(
 
     @Column(name = "comment")
     var comment: String? = null,
-
-    @Column(name = "receiving_status")
-    var receivingStatus: Boolean = false,
 ) : BaseTimeEntity()
 
