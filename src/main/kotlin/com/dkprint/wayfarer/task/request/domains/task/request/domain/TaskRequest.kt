@@ -17,6 +17,12 @@ class TaskRequest(
     @Column(name = "id")
     val id: Long = 0L,
 
+    @Column(name = "code_id")
+    var codeId: Long? = null,
+
+    @Column(name = "task_request_number")
+    var taskRequestNumber: Long? = null,
+
     @Column(name = "is_print")
     var isPrint: Boolean = false,
 
