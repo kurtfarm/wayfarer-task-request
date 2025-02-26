@@ -6,6 +6,7 @@ import com.dkprint.wayfarer.task.request.domains.task.request.application.TaskRe
 import jakarta.validation.Valid
 import java.net.URI
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -32,5 +33,11 @@ class TaskRequestApi(
     ): ResponseEntity<TaskRequestResponse> {
         val taskRequestResponse: TaskRequestResponse = taskRequestService.update(taskRequestNumber, taskRequestDto)
         return ResponseEntity.ok(taskRequestResponse)
+    }
+
+    @DeleteMapping("/task-request/{taskRequestNumber}")
+    fun deleteTaskRequest(@PathVariable taskRequestNumber: Long): ResponseEntity<Void> {
+        taskRequestService.delete(taskRequestNumber)
+        return ResponseEntity.noContent().build()
     }
 }
