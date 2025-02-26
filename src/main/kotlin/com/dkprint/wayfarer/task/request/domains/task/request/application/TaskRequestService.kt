@@ -34,6 +34,36 @@ class TaskRequestService(
         val taskRequestId: Long = savedTaskRequest.id
         val productName: String = taskRequestDto.detailsDto.productName
 
+        save(taskRequestId, taskRequestDto, productName)
+
+        return TaskRequestResponse(id = taskRequestId, status = true)
+    }
+
+    private fun createTaskRequest(
+        taskRequestDto: TaskRequestDto,
+    ): TaskRequest {
+        val taskRequest: TaskRequest = TaskRequest.from(taskRequestDto)
+        return taskRequestRepository.save(taskRequest)
+    }
+
+    @Transactional
+    fun update(taskRequestNumber: Long, taskRequestDto: TaskRequestDto): TaskRequestResponse {
+        val taskRequest: TaskRequest = taskRequestRepository.findByTaskRequestNumber(taskRequestNumber)
+            ?: throw IllegalArgumentException("작업 의뢰서 번호: $taskRequestNumber 조회 오류")
+
+        val productName: String = taskRequestDto.detailsDto.productName
+        val taskRequestId: Long = taskRequest.id
+
+        save(taskRequestId, taskRequestDto, productName)
+
+        return TaskRequestResponse(id = taskRequestId, status = true)
+    }
+
+    private fun save(
+        taskRequestId: Long,
+        taskRequestDto: TaskRequestDto,
+        productName: String
+    ) {
         detailsService.create(taskRequestId, taskRequestDto.detailsDto)
         fabricMappingService.create(taskRequestId, taskRequestDto.fabricDtos)
 
@@ -45,14 +75,5 @@ class TaskRequestService(
             processingDto?.let { processingService.createProcessing(taskRequestId, it) }
             printDesigns?.let { printDesignService.create(taskRequestId, productName, it) }
         }
-
-        return TaskRequestResponse(id = taskRequestId, status = true)
-    }
-
-    private fun createTaskRequest(
-        taskRequestDto: TaskRequestDto,
-    ): TaskRequest {
-        val taskRequest: TaskRequest = TaskRequest.from(taskRequestDto)
-        return taskRequestRepository.save(taskRequest)
     }
 }

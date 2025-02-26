@@ -6,6 +6,8 @@ import com.dkprint.wayfarer.task.request.domains.task.request.application.TaskRe
 import jakarta.validation.Valid
 import java.net.URI
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,9 +19,18 @@ class TaskRequestApi(
     val taskRequestService: TaskRequestService
 ) {
     @PostMapping("/task-request")
-    fun taskRequest(@Valid @RequestBody taskRequestDto: TaskRequestDto): ResponseEntity<TaskRequestResponse> {
-        val savedTaskRequest: TaskRequestResponse = taskRequestService.create(taskRequestDto)
-        return ResponseEntity.created(URI.create("/api/task-request/" + savedTaskRequest.id))
-            .body(savedTaskRequest)
+    fun createTaskRequest(@Valid @RequestBody taskRequestDto: TaskRequestDto): ResponseEntity<TaskRequestResponse> {
+        val taskRequestResponse: TaskRequestResponse = taskRequestService.create(taskRequestDto)
+        return ResponseEntity.created(URI.create("/api/task-request/${taskRequestResponse.id}"))
+            .body(taskRequestResponse)
+    }
+
+    @PatchMapping("/task-request/{taskRequestNumber}")
+    fun updateTaskRequest(
+        @PathVariable taskRequestNumber: Long,
+        @Valid @RequestBody taskRequestDto: TaskRequestDto
+    ): ResponseEntity<TaskRequestResponse> {
+        val taskRequestResponse: TaskRequestResponse = taskRequestService.update(taskRequestNumber, taskRequestDto)
+        return ResponseEntity.ok(taskRequestResponse)
     }
 }
