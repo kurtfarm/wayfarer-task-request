@@ -37,5 +37,5 @@ data class TaskRequestDto(
     val etc2Dto: EtcDto?,
     val processingDto: ProcessingDto?,
 
-    @field:Size(max = 5) val printDesigns: List<MultipartFile>?,
+    @field:Size(max = 5) var printDesigns: List<MultipartFile>?,
 )

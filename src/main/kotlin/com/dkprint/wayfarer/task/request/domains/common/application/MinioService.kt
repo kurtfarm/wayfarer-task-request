@@ -8,6 +8,7 @@ import io.minio.GetPresignedObjectUrlArgs
 import io.minio.MakeBucketArgs
 import io.minio.MinioClient
 import io.minio.PutObjectArgs
+import io.minio.RemoveObjectArgs
 import io.minio.errors.ErrorResponseException
 import io.minio.errors.MinioException
 import io.minio.http.Method
@@ -66,6 +67,19 @@ class MinioService(
         }
 
         return urls
+    }
+
+    override fun delete(id: Long) {
+        try {
+            minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                    .bucket(bucketName)
+                    .`object`("$id/")
+                    .build()
+            )
+        } catch (e: Exception) {
+            throw RuntimeException("MinIO 삭제 오류: ${e.message}")
+        }
     }
 
     private fun isBucketExists(bucketName: String): Boolean {
