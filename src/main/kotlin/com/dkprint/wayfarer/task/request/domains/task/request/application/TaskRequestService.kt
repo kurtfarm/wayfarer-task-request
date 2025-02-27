@@ -1,8 +1,11 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.application
 
+import com.dkprint.wayfarer.task.request.domains.common.application.MinioService
 import com.dkprint.wayfarer.task.request.domains.details.application.DetailsService
+import com.dkprint.wayfarer.task.request.domains.details.dto.DetailsDto
 import com.dkprint.wayfarer.task.request.domains.etc.application.EtcService
 import com.dkprint.wayfarer.task.request.domains.fabric.mapping.application.FabricMappingService
+import com.dkprint.wayfarer.task.request.domains.fabric.mapping.dto.FabricDto
 import com.dkprint.wayfarer.task.request.domains.lamination.application.LaminationService
 import com.dkprint.wayfarer.task.request.domains.print.design.application.PrintDesignService
 import com.dkprint.wayfarer.task.request.domains.printing.application.PrintingService
@@ -12,8 +15,11 @@ import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskReques
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestResponse
 import com.dkprint.wayfarer.task.request.domains.task.request.dao.TaskRequestRepository
 import com.dkprint.wayfarer.task.request.domains.task.request.domain.TaskRequest
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.asm.TypeReference
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class TaskRequestService(
@@ -27,15 +33,18 @@ class TaskRequestService(
     private val etcService: EtcService,
     private val processingService: ProcessingService,
     private val printDesignService: PrintDesignService,
+    private val minioService: MinioService,
 ) {
     @Transactional
-    fun create(taskRequestDto: TaskRequestDto): TaskRequestResponse {
+    fun create(
+        taskRequestDto: TaskRequestDto,
+    ): TaskRequestResponse {
         val savedTaskRequest: TaskRequest = createTaskRequest(taskRequestDto)
+
         val taskRequestId: Long = savedTaskRequest.id
         val productName: String = taskRequestDto.detailsDto.productName
 
-        save(taskRequestId, taskRequestDto, productName)
-
+        saveTaskRequest(taskRequestDto, taskRequestId, productName)
         return TaskRequestResponse(id = taskRequestId, status = true)
     }
 
@@ -54,7 +63,7 @@ class TaskRequestService(
         val productName: String = taskRequestDto.detailsDto.productName
         val taskRequestId: Long = taskRequest.id
 
-        save(taskRequestId, taskRequestDto, productName)
+        saveTaskRequest(taskRequestDto, taskRequestId, productName)
 
         return TaskRequestResponse(id = taskRequestId, status = true)
     }
@@ -65,12 +74,13 @@ class TaskRequestService(
             ?: throw IllegalArgumentException("작업 의뢰서 번호: $taskRequestNumber 조회 오류")
 
         taskRequest.isDeleted = true
+        minioService.delete(taskRequest.id)
     }
 
-    private fun save(
-        taskRequestId: Long,
+    private fun saveTaskRequest(
         taskRequestDto: TaskRequestDto,
-        productName: String
+        taskRequestId: Long,
+        productName: String,
     ) {
         detailsService.create(taskRequestId, taskRequestDto.detailsDto)
         fabricMappingService.create(taskRequestId, taskRequestDto.fabricDtos)
