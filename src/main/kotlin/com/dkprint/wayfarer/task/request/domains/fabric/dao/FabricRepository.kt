@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface FabricRepository : JpaRepository<Fabric, Long> {
-    fun findByFabricType(fabricType: String): Fabric
+    fun findByFabricType(fabricType: String): Fabric?
 }

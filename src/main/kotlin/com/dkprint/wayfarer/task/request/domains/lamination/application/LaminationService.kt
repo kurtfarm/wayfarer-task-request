@@ -13,11 +13,9 @@ class LaminationService(
     @Transactional
     fun create(
         taskRequestId: Long,
-        laminationDtos: List<LaminationDto>,
+        laminationDto: LaminationDto,
     ) {
-        laminationDtos.forEach { laminationDto ->
-            val lamination: Lamination = Lamination.of(taskRequestId, laminationDto)
-            laminationRepository.save(lamination)
-        }
+        val lamination: Lamination = Lamination.of(taskRequestId, laminationDto)
+        laminationRepository.save(lamination)
     }
 }

@@ -5,6 +5,7 @@ import com.dkprint.wayfarer.task.request.global.exception.MinioServerException
 import com.dkprint.wayfarer.task.request.infrastructure.`object`.storage.ObjectStorageService
 import io.minio.BucketExistsArgs
 import io.minio.GetPresignedObjectUrlArgs
+import io.minio.ListObjectsArgs
 import io.minio.MakeBucketArgs
 import io.minio.MinioClient
 import io.minio.PutObjectArgs
@@ -12,6 +13,7 @@ import io.minio.RemoveObjectArgs
 import io.minio.errors.ErrorResponseException
 import io.minio.errors.MinioException
 import io.minio.http.Method
+import io.minio.messages.Item
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -29,54 +31,61 @@ class MinioService(
         }
     }
 
-    override fun upload(id: Long, productName: String, printDesigns: List<MultipartFile>) {
-        printDesigns.forEachIndexed { index, printDesign ->
-            val fileName = "$id/$index-$productName/${printDesign.originalFilename}"
-            try {
-                minioClient.putObject(
-                    PutObjectArgs.builder()
-                        .bucket(bucketName)
-                        .`object`(fileName)
-                        .stream(printDesign.inputStream, printDesign.size, -1)
-                        .contentType(printDesign.contentType)
-                        .build()
-                )
-            } catch (e: ErrorResponseException) {
-                throw MinioServerException("MinIO Server Exception: ${e.message}")
-            } catch (e: MinioException) {
-                throw MinioClientException("MinIO Client Exception: ${e.message}")
-            }
-        }
-    }
-
-    override fun generatePreSignedUrl(id: Long, productName: String, printDesigns: List<MultipartFile>): List<String> {
-        val urls: MutableList<String> = mutableListOf()
-
-        printDesigns.forEachIndexed { index, printDesign ->
-            val fileName: String = "$id/$index-$productName/${printDesign.originalFilename}"
-
-            val preSignedUrl: String = minioClient.getPresignedObjectUrl(
-                GetPresignedObjectUrlArgs.builder()
+    override fun upload(
+        id: Long,
+        productName: String,
+        file: MultipartFile,
+    ): String {
+        val directoryPath = "$id/$productName/${file.originalFilename}"
+        try {
+            minioClient.putObject(
+                PutObjectArgs.builder()
                     .bucket(bucketName)
-                    .`object`(fileName)
-                    .method(Method.GET)
+                    .`object`(directoryPath)
+                    .stream(file.inputStream, file.size, -1)
+                    .contentType(file.contentType)
                     .build()
             )
-
-            urls.add(preSignedUrl)
+        } catch (e: ErrorResponseException) {
+            throw MinioServerException("MinIO Server Exception: ${e.message}")
+        } catch (e: MinioException) {
+            throw MinioClientException("MinIO Client Exception: ${e.message}")
         }
+        return directoryPath
+    }
 
-        return urls
+    override fun generatePreSignedUrl(
+        directoryPath: String,
+    ): String {
+        return minioClient.getPresignedObjectUrl(
+            GetPresignedObjectUrlArgs.builder()
+                .bucket(bucketName)
+                .`object`(directoryPath)
+                .method(Method.GET)
+                .build()
+        )
     }
 
     override fun delete(id: Long) {
+        val prefix: String = "$id/"
         try {
-            minioClient.removeObject(
-                RemoveObjectArgs.builder()
+            val objects = minioClient.listObjects(
+                ListObjectsArgs.builder()
                     .bucket(bucketName)
-                    .`object`("$id/")
+                    .prefix(prefix)
+                    .recursive(true)
                     .build()
             )
+
+            objects.forEach { `object` ->
+                val file: Item = `object`.get()
+                minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                        .bucket(bucketName)
+                        .`object`(file.objectName())
+                        .build()
+                )
+            }
         } catch (e: Exception) {
             throw RuntimeException("MinIO 삭제 오류: ${e.message}")
         }

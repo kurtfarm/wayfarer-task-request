@@ -4,6 +4,7 @@ import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskReques
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestResponse
 import com.dkprint.wayfarer.task.request.domains.task.request.application.TaskRequestService
 import java.net.URI
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -19,27 +20,25 @@ import org.springframework.web.multipart.MultipartFile
 class TaskRequestApi(
     val taskRequestService: TaskRequestService
 ) {
-    @PostMapping("/task-request")
+    @PostMapping("/task-request", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun createTaskRequest(
         @RequestPart taskRequestDto: TaskRequestDto,
         @RequestPart printDesigns: List<MultipartFile>?,
     ): ResponseEntity<TaskRequestResponse> {
         taskRequestDto.printDesigns = printDesigns
-        val taskRequestResponse: TaskRequestResponse =
-            taskRequestService.create(taskRequestDto)
+        val taskRequestResponse: TaskRequestResponse = taskRequestService.create(taskRequestDto)
         return ResponseEntity.created(URI.create("/api/task-request/${taskRequestResponse.id}"))
             .body(taskRequestResponse)
     }
 
-    @PatchMapping("/task-request/{taskRequestNumber}")
+    @PatchMapping("/task-request/{taskRequestNumber}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun updateTaskRequest(
         @PathVariable taskRequestNumber: Long,
         @RequestPart taskRequestDto: TaskRequestDto,
         @RequestPart printDesigns: List<MultipartFile>?,
     ): ResponseEntity<TaskRequestResponse> {
         taskRequestDto.printDesigns = printDesigns
-        val taskRequestResponse: TaskRequestResponse =
-            taskRequestService.update(taskRequestNumber, taskRequestDto)
+        val taskRequestResponse: TaskRequestResponse = taskRequestService.update(taskRequestNumber, taskRequestDto)
         return ResponseEntity.ok(taskRequestResponse)
     }
 

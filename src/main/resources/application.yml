@@ -1,6 +1,3 @@
 spring:
   application:
     name: wayfarer-task-request
-
-  profiles:
-    active: develop
