@@ -16,12 +16,11 @@ class FabricMappingService(
     @Transactional
     fun create(
         taskRequestId: Long,
-        fabricDtos: List<FabricDto>,
+        fabricDto: FabricDto,
     ) {
-        fabricDtos.forEach { fabricDto ->
-            val fabric: Fabric = fabricRepository.findByFabricType(fabricDto.fabricType)
-            val fabricMapping: FabricMapping = FabricMapping.of(taskRequestId, fabric.id, fabricDto.fabricClass)
-            fabricMappingRepository.save(fabricMapping)
-        }
+        val fabric: Fabric = fabricRepository.findByFabricType(fabricDto.fabricType)
+            ?: throw IllegalArgumentException("fabric type: ${fabricDto.fabricType} 조회 오류")
+        val fabricMapping: FabricMapping = FabricMapping.of(taskRequestId, fabric.id, fabricDto.fabricClass)
+        fabricMappingRepository.save(fabricMapping)
     }
 }

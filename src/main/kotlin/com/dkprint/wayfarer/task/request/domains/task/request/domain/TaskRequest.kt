@@ -65,6 +65,25 @@ class TaskRequest(
     @Column(name = "processing_comment")
     var processingComment: String? = null,
 ) : BaseTimeEntity() {
+    fun update(entity: TaskRequest) {
+        this.codeId = entity.codeId
+        this.taskRequestNumber = entity.taskRequestNumber
+        this.isPrint = entity.isPrint
+        this.isLamination = entity.isLamination
+        this.isProcessing = entity.isProcessing
+        this.isSlitting = entity.isSlitting
+        this.isEtc1 = entity.isEtc1
+        this.isEtc2 = entity.isEtc2
+        this.generalComment = entity.generalComment
+        this.fabricComment = entity.fabricComment
+        this.printingComment = entity.printingComment
+        this.laminationComment = entity.laminationComment
+        this.slittingComment = entity.slittingComment
+        this.etc1Comment = entity.etc1Comment
+        this.etc2Comment = entity.etc2Comment
+        this.processingComment = entity.processingComment
+    }
+
     companion object {
         fun from(
             taskRequestDto: TaskRequestDto,

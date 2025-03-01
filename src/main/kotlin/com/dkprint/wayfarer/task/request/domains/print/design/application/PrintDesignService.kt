@@ -14,18 +14,14 @@ class PrintDesignService(
 ) {
     @Transactional
     fun create(
-        id: Long,
+        taskRequestId: Long,
         productName: String,
-        printDesigns: List<MultipartFile>,
+        file: MultipartFile,
     ) {
         minioService.checkBucket()
-        minioService.upload(id, productName, printDesigns)
-
-        val urls: List<String> = minioService.generatePreSignedUrl(id, productName, printDesigns)
-
-        urls.forEach { url ->
-            val printDesign: PrintDesign = PrintDesign(taskRequestId = id, printDesign = url)
-            printDesignRepository.save(printDesign)
-        }
+        val directoryPath: String = minioService.upload(taskRequestId, productName, file)
+        val preSignedUrl: String = minioService.generatePreSignedUrl(directoryPath)
+        val printDesign: PrintDesign = PrintDesign(taskRequestId = taskRequestId, printDesign = preSignedUrl)
+        printDesignRepository.save(printDesign)
     }
 }

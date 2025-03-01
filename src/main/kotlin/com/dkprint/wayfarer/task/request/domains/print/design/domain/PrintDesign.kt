@@ -12,6 +12,6 @@ class PrintDesign(
     @Column(name = "task_request_id")
     val taskRequestId: Long,
 
-    @Column(name = "print_design")
+    @Column(name = "print_design", columnDefinition = "TEXT")
     val printDesign: String,
 )
