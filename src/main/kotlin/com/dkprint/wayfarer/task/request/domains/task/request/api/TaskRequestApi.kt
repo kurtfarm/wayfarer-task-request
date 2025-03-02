@@ -3,6 +3,7 @@ package com.dkprint.wayfarer.task.request.domains.task.request.api
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestDto
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestResponse
 import com.dkprint.wayfarer.task.request.domains.task.request.application.TaskRequestFacade
+import jakarta.validation.constraints.Size
 import java.net.URI
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -23,7 +24,7 @@ class TaskRequestApi(
     @PostMapping("/task-request", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun createTaskRequest(
         @RequestPart taskRequestDto: TaskRequestDto,
-        @RequestPart printDesigns: List<MultipartFile>?,
+        @RequestPart @Size(max = 5) printDesigns: List<MultipartFile>?,
     ): ResponseEntity<TaskRequestResponse> {
         taskRequestDto.printDesigns = printDesigns
         val taskRequestResponse: TaskRequestResponse = taskRequestFacade.create(taskRequestDto)
@@ -35,7 +36,7 @@ class TaskRequestApi(
     fun updateTaskRequest(
         @PathVariable taskRequestNumber: Long,
         @RequestPart taskRequestDto: TaskRequestDto,
-        @RequestPart printDesigns: List<MultipartFile>?,
+        @RequestPart @Size(max = 5) printDesigns: List<MultipartFile>?,
     ): ResponseEntity<TaskRequestResponse> {
         taskRequestDto.printDesigns = printDesigns
         val taskRequestResponse: TaskRequestResponse = taskRequestFacade.update(taskRequestNumber, taskRequestDto)
