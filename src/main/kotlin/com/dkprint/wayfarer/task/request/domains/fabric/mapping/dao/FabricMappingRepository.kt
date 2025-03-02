@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface FabricMappingRepository : JpaRepository<FabricMapping, Long>
+interface FabricMappingRepository : JpaRepository<FabricMapping, Long> {
+    fun deleteAllByTaskRequestId(taskRequestId: Long)
+}
