@@ -9,11 +9,16 @@ import io.minio.ListObjectsArgs
 import io.minio.MakeBucketArgs
 import io.minio.MinioClient
 import io.minio.PutObjectArgs
-import io.minio.RemoveObjectArgs
+import io.minio.RemoveObjectsArgs
+import io.minio.Result
 import io.minio.errors.ErrorResponseException
 import io.minio.errors.MinioException
 import io.minio.http.Method
+import io.minio.messages.DeleteError
+import io.minio.messages.DeleteObject
 import io.minio.messages.Item
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -25,6 +30,8 @@ class MinioService(
     @Value("\${minio.bucketName}")
     private val bucketName: String,
 ) : ObjectStorageService {
+    private val log: Logger = LoggerFactory.getLogger(MinioService::class.java)
+
     fun checkBucket() {
         if (!isBucketExists(bucketName)) {
             createBucket(bucketName)
@@ -69,7 +76,7 @@ class MinioService(
     override fun delete(id: Long) {
         val prefix: String = "$id/"
         try {
-            val objects = minioClient.listObjects(
+            val listedObjects: MutableIterable<Result<Item>> = minioClient.listObjects(
                 ListObjectsArgs.builder()
                     .bucket(bucketName)
                     .prefix(prefix)
@@ -77,14 +84,24 @@ class MinioService(
                     .build()
             )
 
-            objects.forEach { `object` ->
-                val file: Item = `object`.get()
-                minioClient.removeObject(
-                    RemoveObjectArgs.builder()
-                        .bucket(bucketName)
-                        .`object`(file.objectName())
-                        .build()
-                )
+            val deleteObjects: MutableList<DeleteObject> = mutableListOf()
+            listedObjects.forEach { objectResult ->
+                val item: Item = objectResult.get()
+                val deletingObject = DeleteObject(item.objectName())
+                deleteObjects.add(deletingObject)
+            }
+
+
+            val results: Iterable<Result<DeleteError>> = minioClient.removeObjects(
+                RemoveObjectsArgs.builder()
+                    .bucket(bucketName)
+                    .objects(deleteObjects)
+                    .build()
+            )
+
+            for (result in results) {
+                val error = result.get()
+                log.info("오브젝트: ${error.objectName()} 삭제 오류, ${error.message()}")
             }
         } catch (e: Exception) {
             throw RuntimeException("MinIO 삭제 오류: ${e.message}")
