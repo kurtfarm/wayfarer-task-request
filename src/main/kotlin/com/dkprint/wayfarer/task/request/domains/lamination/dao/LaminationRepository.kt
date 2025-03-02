@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface LaminationRepository : JpaRepository<Lamination, Long>
+interface LaminationRepository : JpaRepository<Lamination, Long> {
+    fun deleteAllByTaskRequestId(taskRequestId: Long)
+}

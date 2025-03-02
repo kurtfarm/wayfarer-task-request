@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface PrintDesignRepository : JpaRepository<PrintDesign, Long>
+interface PrintDesignRepository : JpaRepository<PrintDesign, Long> {
+    fun deleteByTaskRequestId(taskRequestId: Long)
+}
