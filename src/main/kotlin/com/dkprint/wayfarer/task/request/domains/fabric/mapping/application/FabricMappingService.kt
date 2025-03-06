@@ -11,7 +11,7 @@ class FabricMappingService(
     // private val fabricSdk: FabricSdk,
 ) {
     fun create(taskRequestId: Long, fabricDto: FabricDto) {
-        val fabricId: Long = 1L // fabricSdk.findByFabricType(fabricDto.fabricType)
+        val fabricId: Long = 1L // fabricSdk.findIdByFabricType(fabricDto.fabricType)
         val fabricMapping: FabricMapping = FabricMapping.of(taskRequestId, fabricId, fabricDto.fabricClass)
         fabricMappingRepository.save(fabricMapping)
     }

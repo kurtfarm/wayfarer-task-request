@@ -11,7 +11,7 @@ class EtcService(
     // private val vendorSdk: VendorSdk,
 ) {
     fun create(taskRequestId: Long, etcDto: EtcDto) {
-        val vendorId: Long = 1L // vendorRepository.findByVendorName(etcDto.vendorName)
+        val vendorId: Long = 1L // vendorRepository.findIdByVendorName(etcDto.vendorName)
         val etc: Etc = Etc.of(taskRequestId, vendorId, etcDto)
         etcRepository.save(etc)
     }

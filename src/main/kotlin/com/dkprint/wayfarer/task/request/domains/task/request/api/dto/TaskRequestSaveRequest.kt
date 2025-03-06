@@ -9,7 +9,7 @@ import com.dkprint.wayfarer.task.request.domains.processing.dto.ProcessingDto
 import com.dkprint.wayfarer.task.request.domains.slitting.dto.SlittingDto
 import org.springframework.web.multipart.MultipartFile
 
-data class TaskRequestDto(
+data class TaskRequestSaveRequest(
     val isPrint: Boolean,
     val isLamination: Boolean,
     val isProcessing: Boolean,

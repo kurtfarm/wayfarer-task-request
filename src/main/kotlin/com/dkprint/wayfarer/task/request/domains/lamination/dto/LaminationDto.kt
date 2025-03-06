@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 data class LaminationDto(
     val sequence: Int,
-    val taskName: String,
+    val taskVendorName: String,
     val taskType: String,
     val quantity: Int,
     val comment: String,
