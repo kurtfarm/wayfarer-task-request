@@ -22,8 +22,8 @@ class Lamination(
     @Column(name = "sequence")
     var sequence: Int,
 
-    @Column(name = "task_name")
-    var taskName: String,
+    @Column(name = "task_vendor_id")
+    var vendorId: Long = 0L,
 
     @Column(name = "task_type")
     var taskType: String,
@@ -41,11 +41,12 @@ class Lamination(
         fun of(
             taskRequestId: Long,
             laminationDto: LaminationDto,
+            vendorId: Long,
         ): Lamination {
             return Lamination(
                 taskRequestId = taskRequestId,
                 sequence = laminationDto.sequence,
-                taskName = laminationDto.taskName,
+                vendorId = vendorId,
                 taskType = laminationDto.taskType,
                 quantity = laminationDto.quantity,
                 comment = laminationDto.comment,

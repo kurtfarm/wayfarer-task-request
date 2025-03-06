@@ -1,7 +1,7 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.domain
 
 import com.dkprint.wayfarer.task.request.domains.common.domain.BaseTimeEntity
-import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestDto
+import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestSaveRequest
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -18,10 +18,10 @@ class TaskRequest(
     val id: Long = 0L,
 
     @Column(name = "code_id")
-    var codeId: Long? = null,
+    var codeId: Long = 0L,
 
     @Column(name = "task_request_number")
-    var taskRequestNumber: Long? = null,
+    var taskRequestNumber: String = "",
 
     @Column(name = "is_print")
     var isPrint: Boolean = false,
@@ -65,45 +65,41 @@ class TaskRequest(
     @Column(name = "processing_comment")
     var processingComment: String? = null,
 ) : BaseTimeEntity() {
-    fun update(entity: TaskRequest) {
-        this.codeId = entity.codeId
-        this.taskRequestNumber = entity.taskRequestNumber
-        this.isPrint = entity.isPrint
-        this.isLamination = entity.isLamination
-        this.isProcessing = entity.isProcessing
-        this.isSlitting = entity.isSlitting
-        this.isEtc1 = entity.isEtc1
-        this.isEtc2 = entity.isEtc2
-        this.generalComment = entity.generalComment
-        this.fabricComment = entity.fabricComment
-        this.printingComment = entity.printingComment
-        this.laminationComment = entity.laminationComment
-        this.slittingComment = entity.slittingComment
-        this.etc1Comment = entity.etc1Comment
-        this.etc2Comment = entity.etc2Comment
-        this.processingComment = entity.processingComment
+    fun update(taskRequest: TaskRequest) {
+        this.isPrint = taskRequest.isPrint
+        this.isLamination = taskRequest.isLamination
+        this.isProcessing = taskRequest.isProcessing
+        this.isSlitting = taskRequest.isSlitting
+        this.isEtc1 = taskRequest.isEtc1
+        this.isEtc2 = taskRequest.isEtc2
+        this.generalComment = taskRequest.generalComment
+        this.fabricComment = taskRequest.fabricComment
+        this.printingComment = taskRequest.printingComment
+        this.laminationComment = taskRequest.laminationComment
+        this.slittingComment = taskRequest.slittingComment
+        this.etc1Comment = taskRequest.etc1Comment
+        this.etc2Comment = taskRequest.etc2Comment
+        this.processingComment = taskRequest.processingComment
     }
 
     companion object {
-        fun from(
-            taskRequestDto: TaskRequestDto,
-        ): TaskRequest {
+        fun from(taskRequestSaveRequest: TaskRequestSaveRequest): TaskRequest {
             return TaskRequest(
-                isPrint = taskRequestDto.isPrint,
-                isLamination = taskRequestDto.isLamination,
-                isProcessing = taskRequestDto.isProcessing,
-                isSlitting = taskRequestDto.isSlitting,
-                isEtc1 = taskRequestDto.isEtc1,
-                isEtc2 = taskRequestDto.isEtc2,
+                isPrint = taskRequestSaveRequest.isPrint,
+                isLamination = taskRequestSaveRequest.isLamination,
+                isProcessing = taskRequestSaveRequest.isProcessing,
+                isSlitting = taskRequestSaveRequest.isSlitting,
+                isEtc1 = taskRequestSaveRequest.isEtc1,
+                isEtc2 = taskRequestSaveRequest.isEtc2,
 
-                generalComment = taskRequestDto.generalComment,
-                fabricComment = taskRequestDto.fabricComment,
-                printingComment = taskRequestDto.printingComment,
-                laminationComment = taskRequestDto.laminationComment,
-                slittingComment = taskRequestDto.slittingComment,
-                etc1Comment = taskRequestDto.etc1Comment,
-                etc2Comment = taskRequestDto.etc2Comment,
-                processingComment = taskRequestDto.processingComment,
+                generalComment = taskRequestSaveRequest.generalComment,
+                fabricComment = taskRequestSaveRequest.fabricComment,
+                printingComment = taskRequestSaveRequest.printingComment,
+                laminationComment = taskRequestSaveRequest.laminationComment,
+                slittingComment = taskRequestSaveRequest.slittingComment,
+                etc1Comment = taskRequestSaveRequest.etc1Comment,
+                etc2Comment = taskRequestSaveRequest.etc2Comment,
+                processingComment = taskRequestSaveRequest.processingComment,
             )
         }
     }

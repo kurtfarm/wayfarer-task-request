@@ -11,7 +11,7 @@ class SlittingService(
     // private val vendorSdk: VendorSdk,
 ) {
     fun create(taskRequestId: Long, slittingDto: SlittingDto) {
-        val vendorId: Long = 1L // vendorSdk.findByVendorName(slittingDto.vendorName)
+        val vendorId: Long = 1L // vendorSdk.findIdByVendorName(slittingDto.vendorName)
         val slitting: Slitting = Slitting.of(taskRequestId, vendorId, slittingDto)
         slittingRepository.save(slitting)
     }

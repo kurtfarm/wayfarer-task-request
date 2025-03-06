@@ -11,7 +11,7 @@ class PrintingService(
     // private val copperplateSdk: CopperplateSdk,
 ) {
     fun create(taskRequestId: Long, printingDto: PrintingDto) {
-        val copperplateId: Long = 1L // copperplateSdk.findByCopperplateName(printingDto.copperplateName)
+        val copperplateId: Long = 1L // copperplateSdk.findIdByCopperplateName(printingDto.copperplateName)
         val printing: Printing = Printing.of(taskRequestId, copperplateId, printingDto)
         printingRepository.save(printing)
     }

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TaskRequestRepository : JpaRepository<TaskRequest, Long> {
-    fun findByTaskRequestNumber(taskRequestNumber: Long): TaskRequest?
+    fun findByTaskRequestNumber(taskRequestNumber: String): TaskRequest?
 }
