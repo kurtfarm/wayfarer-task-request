@@ -53,6 +53,23 @@ class Processing(
     @Column(name = "opening_direction")
     var openingDirection: String,
 ) {
+    fun toDto(vendorName: String): ProcessingDto {
+        return ProcessingDto(
+            taskType = taskType,
+            quantity = quantity,
+            side = side,
+            dueDate = dueDate,
+            vendorName = vendorName,
+            perforation = perforation,
+            upperPart = upperPart,
+            notch = notch,
+            plainBox = plainBox,
+            round = round,
+            zipper = zipper,
+            stand = stand,
+            openingDirection = openingDirection,
+        )
+    }
     companion object {
         fun of(
             taskRequestId: Long,

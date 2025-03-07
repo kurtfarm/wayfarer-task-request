@@ -1,7 +1,8 @@
 package com.dkprint.wayfarer.task.request.domains.task.request.api
 
-import TaskRequestReadAllResponse
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestReadAllRequest
+import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestReadAllResponse
+import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestReadResponse
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestSaveRequest
 import com.dkprint.wayfarer.task.request.domains.task.request.api.dto.TaskRequestSaveResponse
 import com.dkprint.wayfarer.task.request.domains.task.request.application.TaskRequestFacade
@@ -63,5 +64,10 @@ class TaskRequestApi(
         val sort: Sort = Sort.by("id").ascending()
         val pageable: Pageable = PageRequest.of(taskRequestReadAllRequest.page, 20, sort)
         return taskRequestFacade.readAll(pageable)
+    }
+
+    @GetMapping("/task-request/{taskRequestNumber}")
+    fun read(@PathVariable taskRequestNumber: String): TaskRequestReadResponse {
+        return taskRequestFacade.read(taskRequestNumber)
     }
 }

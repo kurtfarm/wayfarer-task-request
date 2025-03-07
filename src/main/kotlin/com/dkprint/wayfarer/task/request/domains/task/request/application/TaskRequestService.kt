@@ -14,22 +14,22 @@ class TaskRequestService(
     private val taskRequestRepository: TaskRequestRepository,
     // private val codeSdk: CodeSdk,
 ) {
-    fun create(taskRequestSaveRequest: TaskRequestSaveRequest): Long {
+    fun create(taskRequestSaveRequest: TaskRequestSaveRequest): TaskRequest {
         val taskRequest: TaskRequest = TaskRequest.from(taskRequestSaveRequest)
         taskRequest.codeId = 1L // codeSdk.generate()
         val savedTaskRequest: TaskRequest = taskRequestRepository.save(taskRequest)
         val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         val order: String = String.format("%02d", savedTaskRequest.id)
         taskRequest.taskRequestNumber = date + order
-        return savedTaskRequest.id
+        return savedTaskRequest
     }
 
-    fun update(taskRequestNumber: String, taskRequestSaveRequest: TaskRequestSaveRequest): Long {
+    fun update(taskRequestNumber: String, taskRequestSaveRequest: TaskRequestSaveRequest): TaskRequest {
         val oldTaskRequest: TaskRequest = taskRequestRepository.findByTaskRequestNumber(taskRequestNumber)
             ?: throw IllegalArgumentException("작업 의뢰서 번호: $taskRequestNumber 조회 오류")
         val newTaskRequest: TaskRequest = TaskRequest.from(taskRequestSaveRequest)
         oldTaskRequest.update(newTaskRequest)
-        return oldTaskRequest.id
+        return oldTaskRequest
     }
 
     fun delete(taskRequestNumber: String): Long {
@@ -42,5 +42,11 @@ class TaskRequestService(
 
     fun readAll(pageable: Pageable): Page<TaskRequest> {
         return taskRequestRepository.findAll(pageable)
+    }
+
+    fun read(taskRequestNumber: String): TaskRequest {
+        val taskRequest: TaskRequest = taskRequestRepository.findByTaskRequestNumber(taskRequestNumber)
+            ?: throw IllegalArgumentException("작업 의뢰서 번호: $taskRequestNumber 조회 오류")
+        return taskRequest
     }
 }

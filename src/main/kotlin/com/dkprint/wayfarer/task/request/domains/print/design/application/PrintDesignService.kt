@@ -27,4 +27,9 @@ class PrintDesignService(
         printDesignRepository.deleteByTaskRequestId(taskRequestId)
         minioService.delete(taskRequestId)
     }
+
+    fun find(taskRequestId: Long): List<String> {
+        return printDesignRepository.findByTaskRequestId(taskRequestId)
+            .map { it.printDesign }
+    }
 }

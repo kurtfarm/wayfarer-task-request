@@ -48,11 +48,24 @@ class Details(
     @Column(name = "due_date")
     var dueDate: LocalDate,
 ) {
+    fun toDto(vendorName: String): DetailsDto {
+        return DetailsDto(
+            productName = productName,
+            productType = productType,
+            standardWidth = standardWidth,
+            standardLength = standardLength,
+            standardThickness = standardThickness,
+            expectedQuantity = expectedQuantity,
+            expectedMeter = expectedMeter,
+            expectedRollsCount = expectedRollsCount,
+            vendorName = vendorName,
+            orderDate = orderDate,
+            dueDate = dueDate,
+        )
+    }
+
     companion object {
-        fun of(
-            taskRequestId: Long,
-            detailsDto: DetailsDto
-        ): Details {
+        fun of(taskRequestId: Long, detailsDto: DetailsDto): Details {
             return Details(
                 taskRequestId = taskRequestId,
                 orderDate = detailsDto.orderDate,
