@@ -19,4 +19,14 @@ class EtcService(
     fun delete(taskRequestId: Long) {
         etcRepository.deleteById(taskRequestId)
     }
+
+    fun findEtc1(taskRequestId: Long): Etc {
+        return etcRepository.findByTaskRequestIdAndEtcTypeIsFalse(taskRequestId)
+            ?: throw IllegalArgumentException("작업 의뢰서 id: $taskRequestId 조회 오류")
+    }
+
+    fun findEtc2(taskRequestId: Long): Etc {
+        return etcRepository.findByTaskRequestIdAndEtcTypeIsTrue(taskRequestId)
+            ?: throw IllegalArgumentException("작업 의뢰서 id: $taskRequestId 조회 오류")
+    }
 }

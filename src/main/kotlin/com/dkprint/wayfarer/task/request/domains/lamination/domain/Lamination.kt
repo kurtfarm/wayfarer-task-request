@@ -37,6 +37,17 @@ class Lamination(
     @Column(name = "due_date")
     var dueDate: LocalDate,
 ) {
+    fun toDto(taskVendorName: String): LaminationDto {
+        return LaminationDto(
+            sequence = sequence,
+            taskVendorName = taskVendorName,
+            taskType = taskType,
+            quantity = quantity,
+            comment = comment,
+            dueDate = dueDate,
+        )
+    }
+
     companion object {
         fun of(
             taskRequestId: Long,

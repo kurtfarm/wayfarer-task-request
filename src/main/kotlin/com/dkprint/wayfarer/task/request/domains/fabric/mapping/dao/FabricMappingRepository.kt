@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface FabricMappingRepository : JpaRepository<FabricMapping, Long> {
     fun deleteAllByTaskRequestId(taskRequestId: Long)
+    fun findByTaskRequestId(taskRequestId: Long): List<FabricMapping>
 }

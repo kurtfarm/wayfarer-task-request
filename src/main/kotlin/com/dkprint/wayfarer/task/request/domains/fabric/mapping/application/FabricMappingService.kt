@@ -19,4 +19,8 @@ class FabricMappingService(
     fun delete(taskRequestId: Long) {
         fabricMappingRepository.deleteAllByTaskRequestId(taskRequestId)
     }
+
+    fun find(taskRequestId: Long): List<FabricMapping> {
+        return fabricMappingRepository.findByTaskRequestId(taskRequestId)
+    }
 }

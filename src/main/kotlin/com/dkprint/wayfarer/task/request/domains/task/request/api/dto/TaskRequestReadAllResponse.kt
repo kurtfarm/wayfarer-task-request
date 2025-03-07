@@ -1,3 +1,5 @@
+package com.dkprint.wayfarer.task.request.domains.task.request.api.dto
+
 import java.time.LocalDate
 
 data class TaskRequestReadAllResponse(
