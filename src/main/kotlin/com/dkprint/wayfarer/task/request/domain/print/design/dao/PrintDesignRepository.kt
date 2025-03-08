@@ -1,0 +1,11 @@
+package com.dkprint.wayfarer.task.request.domain.print.design.dao
+
+import com.dkprint.wayfarer.task.request.domain.print.design.domain.PrintDesign
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
+
+@Repository
+interface PrintDesignRepository : JpaRepository<PrintDesign, Long> {
+    fun deleteByTaskRequestId(taskRequestId: Long)
+    fun findByTaskRequestId(taskRequestId: Long): List<PrintDesign>
+}
