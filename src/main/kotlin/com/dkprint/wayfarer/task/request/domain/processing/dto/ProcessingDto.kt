@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domain.processing.dto
 
+import com.dkprint.wayfarer.task.request.domain.processing.domain.Processing
 import java.time.LocalDate
 
 data class ProcessingDto(
@@ -16,4 +17,24 @@ data class ProcessingDto(
     val zipper: String,
     val stand: String,
     val openingDirection: String,
-)
+) {
+    companion object {
+        fun of(processing: Processing, vendorName: String): ProcessingDto {
+            return ProcessingDto(
+                taskType = processing.taskType,
+                quantity = processing.quantity,
+                side = processing.side,
+                dueDate = processing.dueDate,
+                vendorName = vendorName,
+                perforation = processing.perforation,
+                upperPart = processing.upperPart,
+                notch = processing.notch,
+                plainBox = processing.plainBox,
+                round = processing.round,
+                zipper = processing.zipper,
+                stand = processing.stand,
+                openingDirection = processing.openingDirection,
+            )
+        }
+    }
+}

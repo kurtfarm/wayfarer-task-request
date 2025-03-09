@@ -2,18 +2,23 @@ package com.dkprint.wayfarer.task.request.domain.task.request.application
 
 import com.dkprint.wayfarer.task.request.domain.details.application.DetailsService
 import com.dkprint.wayfarer.task.request.domain.details.domain.Details
+import com.dkprint.wayfarer.task.request.domain.details.dto.DetailsDto
 import com.dkprint.wayfarer.task.request.domain.etc.application.EtcService
 import com.dkprint.wayfarer.task.request.domain.etc.domain.Etc
+import com.dkprint.wayfarer.task.request.domain.etc.dto.EtcDto
 import com.dkprint.wayfarer.task.request.domain.fabric.mapping.application.FabricMappingService
 import com.dkprint.wayfarer.task.request.domain.fabric.mapping.domain.FabricMapping
 import com.dkprint.wayfarer.task.request.domain.fabric.mapping.dto.FabricDto
 import com.dkprint.wayfarer.task.request.domain.lamination.application.LaminationService
 import com.dkprint.wayfarer.task.request.domain.lamination.domain.Lamination
+import com.dkprint.wayfarer.task.request.domain.lamination.dto.LaminationDto
 import com.dkprint.wayfarer.task.request.domain.print.design.application.PrintDesignService
 import com.dkprint.wayfarer.task.request.domain.printing.application.PrintingService
 import com.dkprint.wayfarer.task.request.domain.printing.domain.Printing
+import com.dkprint.wayfarer.task.request.domain.printing.dto.PrintingDto
 import com.dkprint.wayfarer.task.request.domain.processing.application.ProcessingService
 import com.dkprint.wayfarer.task.request.domain.processing.domain.Processing
+import com.dkprint.wayfarer.task.request.domain.processing.dto.ProcessingDto
 import com.dkprint.wayfarer.task.request.domain.slitting.application.SlittingService
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestReadAllResponse
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestReadResponse
@@ -153,16 +158,16 @@ class TaskRequestFacade(
         val processingVendorName: String = "대경" // vendorSdk.findByVendorId(processing.vendorId)
 
         return TaskRequestReadResponse(
-            detailsDto = details.toDto(detailsVendorName),
+            detailsDto = DetailsDto.of(details, detailsVendorName),
             fabricDtos = fabricDtos,
-            printingDto = printing.toDto(copperplateName),
+            printingDto = PrintingDto.of(printing, copperplateName),
             laminationDtos = laminations.map {
                 val taskVendorName: String = "대경" // vendorSdk.findByVendorId(it.taskRequestId)
-                it.toDto(taskVendorName)
+                LaminationDto.of(it, taskVendorName)
             },
-            etc1Dto = etc1.toDto(etc1VendorName),
-            etc2Dto = etc2.toDto(etc2VendorName),
-            processingDto = processing.toDto(processingVendorName),
+            etc1Dto = EtcDto.of(etc1, etc1VendorName),
+            etc2Dto = EtcDto.of(etc2, etc2VendorName),
+            processingDto = ProcessingDto.of(processing, processingVendorName),
             printingDesigns = printDesigns,
         )
     }

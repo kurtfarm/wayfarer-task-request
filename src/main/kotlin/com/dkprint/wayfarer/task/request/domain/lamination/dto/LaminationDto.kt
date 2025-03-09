@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domain.lamination.dto
 
+import com.dkprint.wayfarer.task.request.domain.lamination.domain.Lamination
 import java.time.LocalDate
 
 data class LaminationDto(
@@ -9,4 +10,17 @@ data class LaminationDto(
     val quantity: Int,
     val comment: String,
     val dueDate: LocalDate,
-)
+) {
+    companion object {
+        fun of(lamination: Lamination, taskVendorName: String): LaminationDto {
+            return LaminationDto(
+                sequence = lamination.sequence,
+                taskVendorName = taskVendorName,
+                taskType = lamination.taskType,
+                quantity = lamination.quantity,
+                comment = lamination.comment,
+                dueDate = lamination.dueDate,
+            )
+        }
+    }
+}

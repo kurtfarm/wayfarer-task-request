@@ -42,20 +42,6 @@ class Printing(
     @Column(name = "is_matte")
     var isMatte: Boolean,
 ) {
-    fun toDto(copperplateName: String): PrintingDto {
-        return PrintingDto(
-            numberOfInks = numberOfInks,
-            copperplateWidth = copperplateWidth,
-            copperplateLength = copperplateLength,
-            dueDate = dueDate,
-            printingType = printingType,
-            supervisionDatetime = supervisionDatetime,
-            printingDirection = printingDirection,
-            copperplateName = copperplateName,
-            isMatte = isMatte,
-        )
-    }
-
     companion object {
         fun of(
             taskRequestId: Long,

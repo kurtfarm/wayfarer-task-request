@@ -38,17 +38,6 @@ class Etc(
     @Column(name = "etc_type")
     var etcType: Boolean,
 ) {
-    fun toDto(vendorName: String): EtcDto {
-        return EtcDto(
-            taskName = taskName,
-            taskType = taskType,
-            quantity = quantity,
-            dueDate = dueDate,
-            vendorName = vendorName,
-            etcType = etcType,
-        )
-    }
-
     companion object {
         fun of(
             taskRequestId: Long,
