@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domain.etc.dto
 
+import com.dkprint.wayfarer.task.request.domain.etc.domain.Etc
 import java.time.LocalDate
 
 data class EtcDto(
@@ -9,4 +10,17 @@ data class EtcDto(
     val dueDate: LocalDate,
     val vendorName: String,
     val etcType: Boolean,
-)
+) {
+    companion object {
+        fun of(etc: Etc, vendorName: String): EtcDto {
+            return EtcDto(
+                taskName = etc.taskName,
+                taskType = etc.taskType,
+                quantity = etc.quantity,
+                dueDate = etc.dueDate,
+                vendorName = vendorName,
+                etcType = etc.etcType,
+            )
+        }
+    }
+}

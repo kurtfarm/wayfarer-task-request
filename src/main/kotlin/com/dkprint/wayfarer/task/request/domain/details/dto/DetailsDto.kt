@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domain.details.dto
 
+import com.dkprint.wayfarer.task.request.domain.details.domain.Details
 import java.time.LocalDate
 
 data class DetailsDto(
@@ -14,4 +15,22 @@ data class DetailsDto(
     val vendorName: String,
     val orderDate: LocalDate,
     val dueDate: LocalDate,
-)
+) {
+    companion object {
+        fun of(details: Details, vendorName: String): DetailsDto {
+            return DetailsDto(
+                productName = details.productName,
+                productType = details.productType,
+                standardWidth = details.standardWidth,
+                standardLength = details.standardLength,
+                standardThickness = details.standardThickness,
+                expectedQuantity = details.expectedQuantity,
+                expectedMeter = details.expectedMeter,
+                expectedRollsCount = details.expectedRollsCount,
+                vendorName = vendorName,
+                orderDate = details.orderDate,
+                dueDate = details.dueDate,
+            )
+        }
+    }
+}
