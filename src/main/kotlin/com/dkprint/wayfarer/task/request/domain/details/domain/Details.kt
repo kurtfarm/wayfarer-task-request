@@ -26,8 +26,8 @@ class Details(
     @Column(name = "standard_length")
     var standardLength: Int,
 
-    @Column(name = "standard_thickness")
-    var standardThickness: Int,
+    @Column(name = "standard_height")
+    var standardHeight: Int?,
 
     @Column(name = "quantity")
     var expectedQuantity: Int,
@@ -49,7 +49,11 @@ class Details(
     var dueDate: LocalDate,
 ) {
     companion object {
-        fun of(taskRequestId: Long, detailsDto: DetailsDto): Details {
+        fun of(
+            taskRequestId: Long,
+            vendorId: Long,
+            detailsDto: DetailsDto,
+        ): Details {
             return Details(
                 taskRequestId = taskRequestId,
                 orderDate = detailsDto.orderDate,
@@ -58,11 +62,11 @@ class Details(
                 dueDate = detailsDto.dueDate,
                 standardWidth = detailsDto.standardWidth,
                 standardLength = detailsDto.standardLength,
-                standardThickness = detailsDto.standardThickness,
+                standardHeight = detailsDto.standardHeight,
                 expectedQuantity = detailsDto.expectedQuantity,
                 expectedMeter = detailsDto.expectedMeter,
                 expectedRollsCount = detailsDto.expectedRollsCount,
-                vendorId = 0L,
+                vendorId = vendorId,
             )
         }
     }

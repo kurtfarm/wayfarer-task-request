@@ -1,7 +1,7 @@
 package com.dkprint.wayfarer.task.request.domain.task.request.api
 
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestReadAllRequest
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestReadAllResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSearchRequest
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSearchResponse
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestReadResponse
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSaveRequest
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSaveResponse
@@ -60,10 +60,10 @@ class TaskRequestApi(
     }
 
     @GetMapping("/task-request")
-    fun readAll(@ModelAttribute taskRequestReadAllRequest: TaskRequestReadAllRequest): Page<TaskRequestReadAllResponse> {
+    fun search(@ModelAttribute taskRequestSearchRequest: TaskRequestSearchRequest): Page<TaskRequestSearchResponse> {
         val sort: Sort = Sort.by("id").ascending()
-        val pageable: Pageable = PageRequest.of(taskRequestReadAllRequest.page, 20, sort)
-        return taskRequestFacade.readAll(pageable)
+        val pageable: Pageable = PageRequest.of(taskRequestSearchRequest.page, 20, sort)
+        return taskRequestFacade.search(taskRequestSearchRequest, pageable)
     }
 
     @GetMapping("/task-request/{taskRequestNumber}")

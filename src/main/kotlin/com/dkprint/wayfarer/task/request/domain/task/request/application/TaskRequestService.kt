@@ -1,5 +1,6 @@
 package com.dkprint.wayfarer.task.request.domain.task.request.application
 
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSearchRequest
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSaveRequest
 import com.dkprint.wayfarer.task.request.domain.task.request.dao.TaskRequestRepository
 import com.dkprint.wayfarer.task.request.domain.task.request.domain.TaskRequest
@@ -40,8 +41,8 @@ class TaskRequestService(
         return taskRequest.id
     }
 
-    fun readAll(pageable: Pageable): Page<TaskRequest> {
-        return taskRequestRepository.findAll(pageable)
+    fun search(taskRequestSearchRequest: TaskRequestSearchRequest, pageable: Pageable): Page<TaskRequest> {
+        return taskRequestRepository.search(taskRequestSearchRequest, pageable)
     }
 
     fun read(taskRequestNumber: String): TaskRequest {

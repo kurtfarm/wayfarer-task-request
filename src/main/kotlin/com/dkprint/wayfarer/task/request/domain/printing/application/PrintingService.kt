@@ -1,5 +1,7 @@
 package com.dkprint.wayfarer.task.request.domain.printing.application
 
+import com.dkprint.wayfarer.task.request.domain.copperplate.mapping.dao.CopperplateMappingRepository
+import com.dkprint.wayfarer.task.request.domain.copperplate.mapping.domain.CopperplateMapping
 import com.dkprint.wayfarer.task.request.domain.printing.dao.PrintingRepository
 import com.dkprint.wayfarer.task.request.domain.printing.domain.Printing
 import com.dkprint.wayfarer.task.request.domain.printing.dto.PrintingDto
@@ -9,12 +11,15 @@ import org.springframework.stereotype.Service
 @Service
 class PrintingService(
     private val printingRepository: PrintingRepository,
+    private val copperplateMappingRepository: CopperplateMappingRepository,
     // private val copperplateSdk: CopperplateSdk,
 ) {
     fun create(taskRequestId: Long, printingDto: PrintingDto) {
         val copperplateId: Long = 1L // copperplateSdk.findIdByCopperplateName(printingDto.copperplateName)
         val printing: Printing = Printing.of(taskRequestId, copperplateId, printingDto)
+        val copperplateMapping: CopperplateMapping = CopperplateMapping.of(taskRequestId, copperplateId)
         printingRepository.save(printing)
+        copperplateMappingRepository.save(copperplateMapping)
     }
 
     fun delete(taskRequestId: Long) {
