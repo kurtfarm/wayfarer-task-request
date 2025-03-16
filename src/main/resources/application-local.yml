@@ -18,6 +18,6 @@ spring:
 
 minio:
   endpoint: http://localhost:9000
-  accessKey: aUhlqcifrjWPF6GG1Hp2
-  secretKey: G7QqiGFYJoUbEJ2BhtdaozHEctwaEf9tyXKWRPed
+  accessKey: tPi2gY4cQUIpplZD6jIx
+  secretKey: 23GiVtFQAws2I9AdWIPnF6BAnljqhYK0XOEA3zqI
   bucketName: test

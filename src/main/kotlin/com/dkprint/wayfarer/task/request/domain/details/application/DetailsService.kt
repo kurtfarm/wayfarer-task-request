@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service
 @Service
 class DetailsService(
     private val detailsRepository: DetailsRepository,
+    // private val vendorSdk: VendorSdk,
 ) {
     fun create(taskRequestId: Long, detailsDto: DetailsDto) {
-        val details: Details = Details.of(taskRequestId, detailsDto)
+        val vendorId: Long = 1L // vendorSdk.findIdByName(detailsDto.vendorName)
+        val details: Details = Details.of(taskRequestId, vendorId, detailsDto)
         detailsRepository.save(details)
     }
 

@@ -20,7 +20,8 @@ import com.dkprint.wayfarer.task.request.domain.processing.application.Processin
 import com.dkprint.wayfarer.task.request.domain.processing.domain.Processing
 import com.dkprint.wayfarer.task.request.domain.processing.dto.ProcessingDto
 import com.dkprint.wayfarer.task.request.domain.slitting.application.SlittingService
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestReadAllResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSearchRequest
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSearchResponse
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestReadResponse
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSaveRequest
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSaveResponse
@@ -76,14 +77,17 @@ class TaskRequestFacade(
     }
 
     @Transactional
-    fun readAll(pageable: Pageable): Page<TaskRequestReadAllResponse> {
-        val taskRequests: Page<TaskRequest> = taskRequestService.readAll(pageable)
+    fun search(
+        taskRequestSearchRequest: TaskRequestSearchRequest,
+        pageable: Pageable,
+    ): Page<TaskRequestSearchResponse> {
+        val taskRequests: Page<TaskRequest> = taskRequestService.search(taskRequestSearchRequest, pageable)
 
         return taskRequests.map {
             val taskRequestId: Long = it.id
             val details: Details = detailsService.find(taskRequestId)
             val productStandard: String =
-                "${details.standardLength} * ${details.standardWidth} * ${details.standardThickness}"
+                "${details.standardLength} * ${details.standardWidth} * ${details.standardHeight}"
             val laminations: List<Lamination> = laminationService.find(taskRequestId)
             val processing: Processing = processingService.find(taskRequestId)
             val code: String = "ABCDEF" // codeSdk.findById(it.codeId)
@@ -99,7 +103,7 @@ class TaskRequestFacade(
 
             val processingVendorName: String = "대경" // vendorSdk.findVendorNameById(processing.vendorId)
 
-            TaskRequestReadAllResponse(
+            TaskRequestSearchResponse(
                 taskRequestId = taskRequestId,
                 orderDate = details.orderDate,
                 taskRequestNumber = it.taskRequestNumber,
