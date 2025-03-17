@@ -18,14 +18,25 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 
+private const val i = 0
+
 @Repository
 class TaskRequestRepositoryCustomImpl(
     private val queryFactory: JPAQueryFactory,
 ) : TaskRequestRepositoryCustom {
     private val taskRequest = QTaskRequest.taskRequest
+
     private val details = QDetails.details
     private val fabricMapping = QFabricMapping.fabricMapping
     private val copperplateMapping = QCopperplateMapping.copperplateMapping
+
+    companion object {
+        private const val WIDTH_INDEX: Int = 0
+        private const val LENGTH_INDEX: Int = 1
+        private const val HEIGHT_INDEX: Int = 2
+
+        private const val MINIMUM_STANDARD_COUNT: Int = 2
+    }
 
     override fun search(taskRequestSearchRequest: TaskRequestSearchRequest, pageable: Pageable): Page<TaskRequest> {
         if (isEmptySearch(taskRequestSearchRequest)) {
@@ -114,12 +125,13 @@ class TaskRequestRepositoryCustomImpl(
 
     private fun createProductStandardCondition(standardValues: List<Int>): BooleanBuilder {
         return BooleanBuilder().apply {
-            if (standardValues.size >= 2) {
-                and(details.standardWidth.eq(standardValues[0]))
-                and(details.standardLength.eq(standardValues[1]))
+            if (standardValues.size >= MINIMUM_STANDARD_COUNT) {
+                and(details.standardWidth.eq(standardValues[WIDTH_INDEX]))
+                and(details.standardLength.eq(standardValues[LENGTH_INDEX]))
             }
-            if (standardValues.size > 2) {
-                and(details.standardHeight.eq(standardValues[2]))
+            
+            if (standardValues.size > MINIMUM_STANDARD_COUNT) {
+                and(details.standardHeight.eq(standardValues[HEIGHT_INDEX]))
             }
         }
     }
