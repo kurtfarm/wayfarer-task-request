@@ -1,4 +1,4 @@
-package com.dkprint.wayfarer.task.request.global.configuration
+package com.dkprint.wayfarer.task.request.global.config
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager

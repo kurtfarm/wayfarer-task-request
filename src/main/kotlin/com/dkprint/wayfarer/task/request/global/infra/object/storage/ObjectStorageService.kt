@@ -1,4 +1,4 @@
-package com.dkprint.wayfarer.task.request.infrastructure.`object`.storage
+package com.dkprint.wayfarer.task.request.global.infra.`object`.storage
 
 import org.springframework.web.multipart.MultipartFile
 

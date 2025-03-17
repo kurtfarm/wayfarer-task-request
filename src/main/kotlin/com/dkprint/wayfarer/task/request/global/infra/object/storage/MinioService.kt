@@ -1,4 +1,4 @@
-package com.dkprint.wayfarer.task.request.infrastructure.`object`.storage
+package com.dkprint.wayfarer.task.request.global.infra.`object`.storage
 
 import com.dkprint.wayfarer.task.request.global.exception.MinioClientException
 import com.dkprint.wayfarer.task.request.global.exception.MinioServerException
