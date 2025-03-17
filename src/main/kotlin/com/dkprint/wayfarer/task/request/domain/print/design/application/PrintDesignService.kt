@@ -1,6 +1,6 @@
 package com.dkprint.wayfarer.task.request.domain.print.design.application
 
-import com.dkprint.wayfarer.task.request.infrastructure.`object`.storage.MinioService
+import com.dkprint.wayfarer.task.request.global.infra.`object`.storage.MinioService
 import com.dkprint.wayfarer.task.request.domain.print.design.dao.PrintDesignRepository
 import com.dkprint.wayfarer.task.request.domain.print.design.domain.PrintDesign
 import org.springframework.stereotype.Service
