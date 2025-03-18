@@ -18,14 +18,11 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 
-private const val i = 0
-
 @Repository
 class TaskRequestRepositoryCustomImpl(
     private val queryFactory: JPAQueryFactory,
 ) : TaskRequestRepositoryCustom {
     private val taskRequest = QTaskRequest.taskRequest
-
     private val details = QDetails.details
     private val fabricMapping = QFabricMapping.fabricMapping
     private val copperplateMapping = QCopperplateMapping.copperplateMapping
@@ -77,28 +74,28 @@ class TaskRequestRepositoryCustomImpl(
 
         when (taskRequestSearchRequest.searchType) {
             SearchType.PRODUCT_NAME.description -> {
-                applyProductNameFilter(builder, keyword)
+                addProductNameFilter(builder, keyword)
             }
 
             SearchType.PRODUCT_STANDARD.description -> {
-                applyProductStandardFilter(builder, keyword)
+                addProductStandardFilter(builder, keyword)
             }
 
             SearchType.PRODUCT_CODE.description -> {
-                applyProductCodeFilter(builder, keyword)
+                addProductCodeFilter(builder, keyword)
             }
 
             SearchType.TASK_REQUEST_NUMBER.description -> {
-                applyTaskRequestNumberFilter(builder, keyword)
+                addTaskRequestNumberFilter(builder, keyword)
             }
 
             SearchType.VENDOR.description -> {
-                applyVendorFilter(builder, keyword)
+                addVendorFilter(builder, keyword)
             }
         }
     }
 
-    private fun applyProductNameFilter(builder: BooleanBuilder, keyword: String) {
+    private fun addProductNameFilter(builder: BooleanBuilder, keyword: String) {
         val selectedTaskRequestIds: List<Long> = queryFactory
             .select(details.taskRequestId)
             .from(details)
@@ -108,7 +105,7 @@ class TaskRequestRepositoryCustomImpl(
         builder.and(taskRequest.id.`in`(selectedTaskRequestIds))
     }
 
-    private fun applyProductStandardFilter(builder: BooleanBuilder, keyword: String) {
+    private fun addProductStandardFilter(builder: BooleanBuilder, keyword: String) {
         val standardValues: List<Int> = keyword.split("*")
             .map { it.trim().toInt() }
 
@@ -129,14 +126,14 @@ class TaskRequestRepositoryCustomImpl(
                 and(details.standardWidth.eq(standardValues[WIDTH_INDEX]))
                 and(details.standardLength.eq(standardValues[LENGTH_INDEX]))
             }
-            
+
             if (standardValues.size > MINIMUM_STANDARD_COUNT) {
                 and(details.standardHeight.eq(standardValues[HEIGHT_INDEX]))
             }
         }
     }
 
-    private fun applyProductCodeFilter(builder: BooleanBuilder, keyword: String) {
+    private fun addProductCodeFilter(builder: BooleanBuilder, keyword: String) {
         val codeId: Long = 1L // codeSdk.findIdByCode(keyword)
 
         val selectedTaskRequestIds: List<Long> = queryFactory
@@ -148,7 +145,7 @@ class TaskRequestRepositoryCustomImpl(
         builder.and(taskRequest.id.`in`(selectedTaskRequestIds))
     }
 
-    private fun applyTaskRequestNumberFilter(builder: BooleanBuilder, keyword: String) {
+    private fun addTaskRequestNumberFilter(builder: BooleanBuilder, keyword: String) {
         val selectedTaskRequestIds: List<Long> = queryFactory
             .select(taskRequest.id)
             .from(taskRequest)
@@ -158,7 +155,7 @@ class TaskRequestRepositoryCustomImpl(
         builder.and(taskRequest.id.`in`(selectedTaskRequestIds))
     }
 
-    private fun applyVendorFilter(builder: BooleanBuilder, keyword: String) {
+    private fun addVendorFilter(builder: BooleanBuilder, keyword: String) {
         val vendorId: Long = 1L // vendorSdk.findIdByName(keyword)
 
         val selectedTaskRequestIds: List<Long> = queryFactory
@@ -182,20 +179,20 @@ class TaskRequestRepositoryCustomImpl(
 
         when (dateType) {
             DateType.ORDER.description -> {
-                applyOrderDateFilter(builder, startDate, endDate)
+                addOrderDateFilter(builder, startDate, endDate)
             }
 
             DateType.FABRIC.description -> {
-                applyFabricDateFilter(builder)
+                addFabricDateFilter(builder)
             }
 
             DateType.COPPERPLATE.description -> {
-                applyCopperplateDateFilter(builder)
+                addCopperplateDateFilter(builder)
             }
         }
     }
 
-    private fun applyOrderDateFilter(
+    private fun addOrderDateFilter(
         builder: BooleanBuilder,
         startDate: LocalDate,
         endDate: LocalDate,
@@ -212,7 +209,7 @@ class TaskRequestRepositoryCustomImpl(
         builder.and(taskRequest.id.`in`(selectedTaskRequestIds))
     }
 
-    private fun applyFabricDateFilter(builder: BooleanBuilder) {
+    private fun addFabricDateFilter(builder: BooleanBuilder) {
         val expectedArrivalDates: List<LocalDate> = listOf(
             LocalDate.now(),
             LocalDate.now().plusDays(1),
@@ -231,7 +228,7 @@ class TaskRequestRepositoryCustomImpl(
         builder.and(taskRequest.id.`in`(selectedTaskRequestIds))
     }
 
-    private fun applyCopperplateDateFilter(builder: BooleanBuilder) {
+    private fun addCopperplateDateFilter(builder: BooleanBuilder) {
         val expectedArrivalDates: List<LocalDate> = listOf(
             LocalDate.now(),
             LocalDate.now().plusDays(1),
