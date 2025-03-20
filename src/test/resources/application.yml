@@ -1,6 +1,13 @@
 server:
   port: 8080
 
+task-request:
+  create: /api/task-request
+  read: /api/task-request/{taskRequestNumber}
+  search: /api/task-request
+  update: /api/task-request/{taskRequestNumber}
+  delete: /api/task-request/{taskRequestNumber}
+
 spring:
   application:
     name: wayfarer-task-request
@@ -19,8 +26,8 @@ spring:
       hibernate:
         format_sql: true
 
-minio:
+s3:
   endpoint: http://localhost:9000
-  accessKey: aUhlqcifrjWPF6GG1Hp2
-  secretKey: G7QqiGFYJoUbEJ2BhtdaozHEctwaEf9tyXKWRPed
+  accessKey: tPi2gY4cQUIpplZD6jIx
+  secretKey: 23GiVtFQAws2I9AdWIPnF6BAnljqhYK0XOEA3zqI
   bucketName: test
