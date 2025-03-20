@@ -28,7 +28,6 @@ import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequest
 import com.dkprint.wayfarer.task.request.domain.task.request.domain.TaskRequest
 import java.time.LocalDate
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -57,66 +56,6 @@ class TaskRequestFacade(
             taskRequestNumber = taskRequest.taskRequestNumber,
             status = true,
         )
-    }
-
-    @Transactional
-    fun update(taskRequestNumber: String, taskRequestSaveRequest: TaskRequestSaveRequest): TaskRequestSaveResponse {
-        val taskRequest: TaskRequest = taskRequestService.update(taskRequestNumber, taskRequestSaveRequest)
-        updateData(taskRequestSaveRequest, taskRequest.id)
-        return TaskRequestSaveResponse(
-            id = taskRequest.id,
-            taskRequestNumber = taskRequest.taskRequestNumber,
-            status = true,
-        )
-    }
-
-    @Transactional
-    fun delete(taskRequestNumber: String) {
-        val taskRequestId: Long = taskRequestService.delete(taskRequestNumber)
-        deleteData(taskRequestId)
-    }
-
-    @Transactional
-    fun search(
-        taskRequestSearchRequest: TaskRequestSearchRequest,
-        pageable: Pageable,
-    ): Page<TaskRequestSearchResponse> {
-        val taskRequests: Page<TaskRequest> = taskRequestService.search(taskRequestSearchRequest, pageable)
-
-        return taskRequests.map {
-            val taskRequestId: Long = it.id
-            val details: Details = detailsService.find(taskRequestId)
-            val productStandard: String =
-                "${details.standardLength} * ${details.standardWidth} * ${details.standardHeight}"
-            val laminations: List<Lamination> = laminationService.find(taskRequestId)
-            val processing: Processing = processingService.find(taskRequestId)
-            val code: String = "ABCDEF" // codeSdk.findById(it.codeId)
-            val fabricExpectedArrivalDate: LocalDate = LocalDate.now() // fabricSdk.findArrivalDateById(it.id)
-            val copperplateExpectedArrivalDate: LocalDate = LocalDate.now() // copperplateSdk.findArrivalDateById(it.id)
-            val productVendorName: String = "대경" // vendorSdk.findVendorNameById(details.vendorId)
-            val laminationVendorNames: List<String> = listOf(
-                "1차 거래처",
-                "2차 거래처",
-                "1차 거래처",
-                "2차 거래처",
-            ).distinct() // laminations.map { lamination ->vendorSdk.findVendorNameById(lamination.vendorId) }
-
-            val processingVendorName: String = "대경" // vendorSdk.findVendorNameById(processing.vendorId)
-
-            TaskRequestSearchResponse(
-                taskRequestId = taskRequestId,
-                orderDate = details.orderDate,
-                taskRequestNumber = it.taskRequestNumber,
-                productCode = code,
-                productName = details.productName,
-                productStandard = productStandard,
-                fabricExpectedArrivalDate = fabricExpectedArrivalDate,
-                copperplateExpectedArrivalDate = copperplateExpectedArrivalDate,
-                productVendorName = productVendorName,
-                laminationVendorNames = laminationVendorNames,
-                processingVendorName = processingVendorName,
-            )
-        }
     }
 
     @Transactional
@@ -174,6 +113,65 @@ class TaskRequestFacade(
             processingDto = ProcessingDto.of(processing, processingVendorName),
             printingDesigns = printDesigns,
         )
+    }
+
+    @Transactional
+    fun update(taskRequestNumber: String, taskRequestSaveRequest: TaskRequestSaveRequest): TaskRequestSaveResponse {
+        val taskRequest: TaskRequest = taskRequestService.update(taskRequestNumber, taskRequestSaveRequest)
+        updateData(taskRequestSaveRequest, taskRequest.id)
+        return TaskRequestSaveResponse(
+            id = taskRequest.id,
+            taskRequestNumber = taskRequest.taskRequestNumber,
+            status = true,
+        )
+    }
+
+    @Transactional
+    fun delete(taskRequestNumber: String) {
+        val taskRequestId: Long = taskRequestService.delete(taskRequestNumber)
+        deleteData(taskRequestId)
+    }
+
+    @Transactional
+    fun search(
+        taskRequestSearchRequest: TaskRequestSearchRequest,
+    ): Page<TaskRequestSearchResponse> {
+        val taskRequests: Page<TaskRequest> = taskRequestService.search(taskRequestSearchRequest)
+
+        return taskRequests.map {
+            val taskRequestId: Long = it.id
+            val details: Details = detailsService.find(taskRequestId)
+            val productStandard: String =
+                "${details.standardLength} * ${details.standardWidth} * ${details.standardHeight}"
+            val laminations: List<Lamination> = laminationService.find(taskRequestId)
+            val processing: Processing = processingService.find(taskRequestId)
+            val code: String = "ABCDEF" // codeSdk.findById(it.codeId)
+            val fabricExpectedArrivalDate: LocalDate = LocalDate.now() // fabricSdk.findArrivalDateById(it.id)
+            val copperplateExpectedArrivalDate: LocalDate = LocalDate.now() // copperplateSdk.findArrivalDateById(it.id)
+            val productVendorName: String = "대경" // vendorSdk.findVendorNameById(details.vendorId)
+            val laminationVendorNames: List<String> = listOf(
+                "1차 거래처",
+                "2차 거래처",
+                "1차 거래처",
+                "2차 거래처",
+            ).distinct() // laminations.map { lamination ->vendorSdk.findVendorNameById(lamination.vendorId) }
+
+            val processingVendorName: String = "대경" // vendorSdk.findVendorNameById(processing.vendorId)
+
+            TaskRequestSearchResponse(
+                taskRequestId = taskRequestId,
+                orderDate = details.orderDate,
+                taskRequestNumber = it.taskRequestNumber,
+                productCode = code,
+                productName = details.productName,
+                productStandard = productStandard,
+                fabricExpectedArrivalDate = fabricExpectedArrivalDate,
+                copperplateExpectedArrivalDate = copperplateExpectedArrivalDate,
+                productVendorName = productVendorName,
+                laminationVendorNames = laminationVendorNames,
+                processingVendorName = processingVendorName,
+            )
+        }
     }
 
     private fun saveData(taskRequestSaveRequest: TaskRequestSaveRequest, taskRequestId: Long) {

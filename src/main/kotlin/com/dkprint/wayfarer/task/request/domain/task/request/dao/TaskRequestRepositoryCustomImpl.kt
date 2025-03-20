@@ -15,6 +15,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 
@@ -31,24 +32,22 @@ class TaskRequestRepositoryCustomImpl(
         private const val WIDTH_INDEX: Int = 0
         private const val LENGTH_INDEX: Int = 1
         private const val HEIGHT_INDEX: Int = 2
-
         private const val MINIMUM_STANDARD_COUNT: Int = 2
+        private const val PAGE_SIZE: Int = 20
     }
 
-    override fun search(taskRequestSearchRequest: TaskRequestSearchRequest, pageable: Pageable): Page<TaskRequest> {
+    override fun search(taskRequestSearchRequest: TaskRequestSearchRequest): Page<TaskRequest> {
+        val pageable: Pageable = PageRequest.of(taskRequestSearchRequest.page, PAGE_SIZE)
+        val builder = BooleanBuilder()
+
         if (isEmptySearch(taskRequestSearchRequest)) {
             return fetchAll(pageable)
         }
 
-        val builder = BooleanBuilder()
-
         addSearchTypeFilter(builder, taskRequestSearchRequest)
         addDateTypeFilter(builder, taskRequestSearchRequest)
 
-        val result: List<TaskRequest> = fetchWithFilters(builder, pageable)
-        val count: Long = result.size.toLong()
-
-        return PageImpl(result, pageable, count)
+        return createPage(builder, pageable)
     }
 
     private fun isEmptySearch(taskRequestSearchRequest: TaskRequestSearchRequest): Boolean {
@@ -245,6 +244,16 @@ class TaskRequestRepositoryCustomImpl(
             .fetch()
 
         builder.and(taskRequest.id.`in`(selectedTaskRequestIds))
+    }
+
+    private fun createPage(
+        builder: BooleanBuilder,
+        pageable: Pageable,
+    ): PageImpl<TaskRequest> {
+        val result: List<TaskRequest> = fetchWithFilters(builder, pageable)
+        val count: Long = result.size.toLong()
+
+        return PageImpl(result, pageable, count)
     }
 
     private fun fetchWithFilters(builder: BooleanBuilder, pageable: Pageable): List<TaskRequest> {
