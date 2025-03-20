@@ -9,9 +9,6 @@ import com.dkprint.wayfarer.task.request.domain.task.request.application.TaskReq
 import jakarta.validation.constraints.Size
 import java.net.URI
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -39,6 +36,11 @@ class TaskRequestApi(
             .body(taskRequestSaveResponse)
     }
 
+    @GetMapping("\${task-request.read}")
+    fun read(@PathVariable taskRequestNumber: String): TaskRequestReadResponse {
+        return taskRequestFacade.read(taskRequestNumber)
+    }
+
     @PatchMapping("\${task-request.update}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun update(
         @PathVariable taskRequestNumber: String,
@@ -59,13 +61,6 @@ class TaskRequestApi(
 
     @GetMapping("\${task-request.search}")
     fun search(@ModelAttribute taskRequestSearchRequest: TaskRequestSearchRequest): Page<TaskRequestSearchResponse> {
-        val sort: Sort = Sort.by("id").ascending()
-        val pageable: Pageable = PageRequest.of(taskRequestSearchRequest.page, 20, sort)
-        return taskRequestFacade.search(taskRequestSearchRequest, pageable)
-    }
-
-    @GetMapping("\${task-request.read}")
-    fun read(@PathVariable taskRequestNumber: String): TaskRequestReadResponse {
-        return taskRequestFacade.read(taskRequestNumber)
+        return taskRequestFacade.search(taskRequestSearchRequest)
     }
 }
