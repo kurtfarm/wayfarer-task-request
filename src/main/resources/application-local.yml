@@ -23,7 +23,7 @@ spring:
       hibernate:
         format_sql: true
 
-minio:
+s3:
   endpoint: http://localhost:9000
   accessKey: tPi2gY4cQUIpplZD6jIx
   secretKey: 23GiVtFQAws2I9AdWIPnF6BAnljqhYK0XOEA3zqI
