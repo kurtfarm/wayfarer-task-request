@@ -1,8 +1,8 @@
-package com.dkprint.wayfarer.task.request.domain.task.request.api.dto
+package com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response
 
 import java.time.LocalDate
 
-data class TaskRequestSearchResponse(
+data class ReadAllResponse(
     val taskRequestId: Long,
     val orderDate: LocalDate,
     val taskRequestNumber: String,

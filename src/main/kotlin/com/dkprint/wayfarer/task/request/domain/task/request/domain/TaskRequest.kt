@@ -1,7 +1,7 @@
 package com.dkprint.wayfarer.task.request.domain.task.request.domain
 
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.request.SaveRequest
 import com.dkprint.wayfarer.task.request.global.entity.BaseTimeEntity
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSaveRequest
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -83,23 +83,23 @@ class TaskRequest(
     }
 
     companion object {
-        fun from(taskRequestSaveRequest: TaskRequestSaveRequest): TaskRequest {
+        fun from(saveRequest: SaveRequest): TaskRequest {
             return TaskRequest(
-                isPrint = taskRequestSaveRequest.isPrint,
-                isLamination = taskRequestSaveRequest.isLamination,
-                isProcessing = taskRequestSaveRequest.isProcessing,
-                isSlitting = taskRequestSaveRequest.isSlitting,
-                isEtc1 = taskRequestSaveRequest.isEtc1,
-                isEtc2 = taskRequestSaveRequest.isEtc2,
+                isPrint = saveRequest.isPrint,
+                isLamination = saveRequest.isLamination,
+                isProcessing = saveRequest.isProcessing,
+                isSlitting = saveRequest.isSlitting,
+                isEtc1 = saveRequest.isEtc1,
+                isEtc2 = saveRequest.isEtc2,
 
-                generalComment = taskRequestSaveRequest.generalComment,
-                fabricComment = taskRequestSaveRequest.fabricComment,
-                printingComment = taskRequestSaveRequest.printingComment,
-                laminationComment = taskRequestSaveRequest.laminationComment,
-                slittingComment = taskRequestSaveRequest.slittingComment,
-                etc1Comment = taskRequestSaveRequest.etc1Comment,
-                etc2Comment = taskRequestSaveRequest.etc2Comment,
-                processingComment = taskRequestSaveRequest.processingComment,
+                generalComment = saveRequest.generalComment,
+                fabricComment = saveRequest.fabricComment,
+                printingComment = saveRequest.printingComment,
+                laminationComment = saveRequest.laminationComment,
+                slittingComment = saveRequest.slittingComment,
+                etc1Comment = saveRequest.etc1Comment,
+                etc2Comment = saveRequest.etc2Comment,
+                processingComment = saveRequest.processingComment,
             )
         }
     }

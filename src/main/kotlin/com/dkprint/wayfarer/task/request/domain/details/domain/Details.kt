@@ -39,7 +39,6 @@ class Details(
     var expectedRollsCount: Int,
 
     @Column(name = "vendor_id")
-
     var vendorId: Long,
 
     @Column(name = "order_date")

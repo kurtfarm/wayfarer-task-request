@@ -11,4 +11,8 @@ class CopperplateMappingService(
     fun create(copperplateMapping: CopperplateMapping) {
         copperplateMappingRepository.save(copperplateMapping)
     }
+
+    fun findByCopperplateIdIn(copperplateIds: List<Long>): List<CopperplateMapping> {
+        return copperplateMappingRepository.findByCopperplateIdIn(copperplateIds)
+    }
 }

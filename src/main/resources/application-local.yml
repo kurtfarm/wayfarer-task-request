@@ -4,9 +4,10 @@ server:
 task-request:
   create: /api/task-request
   read: /api/task-request/{taskRequestNumber}
-  search: /api/task-request
+  read-all: /api/task-request
   update: /api/task-request/{taskRequestNumber}
   delete: /api/task-request/{taskRequestNumber}
+  search: /api/task-request/search
 
 spring:
   datasource:
@@ -17,7 +18,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:

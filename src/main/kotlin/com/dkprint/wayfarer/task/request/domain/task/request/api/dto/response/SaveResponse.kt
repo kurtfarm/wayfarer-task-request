@@ -1,8 +1,8 @@
-package com.dkprint.wayfarer.task.request.domain.task.request.api.dto
+package com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response
 
 import java.time.LocalDateTime
 
-data class TaskRequestSaveResponse(
+data class SaveResponse(
     val id: Long,
     val taskRequestNumber: String,
     val status: Boolean,

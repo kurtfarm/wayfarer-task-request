@@ -1,0 +1,17 @@
+package com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response
+
+import java.time.LocalDate
+
+data class SearchResponse(
+    val taskRequestId: Long,
+    val orderDate: LocalDate,
+    val taskRequestNumber: String,
+    val productCode: String,
+    val productName: String,
+    val productStandard: String,
+    val fabricExpectedArrivalDate: LocalDate,
+    val copperplateExpectedArrivalDate: LocalDate,
+    val productVendorName: String,
+    val laminationVendorNames: List<String>,
+    val processingVendorName: String,
+)
