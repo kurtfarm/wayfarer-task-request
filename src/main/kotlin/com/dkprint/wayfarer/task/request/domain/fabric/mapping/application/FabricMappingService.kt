@@ -23,4 +23,8 @@ class FabricMappingService(
     fun find(taskRequestId: Long): List<FabricMapping> {
         return fabricMappingRepository.findByTaskRequestId(taskRequestId)
     }
+
+    fun findByFabricIdIn(fabricIds: List<Long>): List<FabricMapping> {
+        return fabricMappingRepository.findByFabricIdIn(fabricIds)
+    }
 }

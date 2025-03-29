@@ -1,10 +1,12 @@
 package com.dkprint.wayfarer.task.request.domain.task.request.api
 
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestReadResponse
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSaveRequest
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSaveResponse
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSearchRequest
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSearchResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.request.ReadAllRequest
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.request.SaveRequest
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.request.SearchRequest
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.ReadAllResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.ReadResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.SaveResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.SearchResponse
 import com.dkprint.wayfarer.task.request.domain.task.request.application.TaskRequestFacade
 import jakarta.validation.constraints.Size
 import java.net.URI
@@ -23,34 +25,40 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 class TaskRequestApi(
-    val taskRequestFacade: TaskRequestFacade,
+    private val taskRequestFacade: TaskRequestFacade,
 ) {
     @PostMapping("\${task-request.create}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun create(
-        @RequestPart taskRequestSaveRequest: TaskRequestSaveRequest,
+        @RequestPart saveRequest: SaveRequest,
         @RequestPart @Size(max = 5) printDesigns: List<MultipartFile>?,
-    ): ResponseEntity<TaskRequestSaveResponse> {
-        taskRequestSaveRequest.printDesigns = printDesigns
-        val taskRequestSaveResponse: TaskRequestSaveResponse = taskRequestFacade.create(taskRequestSaveRequest)
-        return ResponseEntity.created(URI.create("/api/task-request/${taskRequestSaveResponse.id}"))
-            .body(taskRequestSaveResponse)
+    ): ResponseEntity<SaveResponse> {
+        saveRequest.printDesigns = printDesigns
+        val saveResponse: SaveResponse = taskRequestFacade.create(saveRequest)
+        return ResponseEntity.created(URI.create("/api/task-request/${saveResponse.taskRequestNumber}"))
+            .body(saveResponse)
     }
 
     @GetMapping("\${task-request.read}")
-    fun read(@PathVariable taskRequestNumber: String): TaskRequestReadResponse {
-        return taskRequestFacade.read(taskRequestNumber)
+    fun read(@PathVariable taskRequestNumber: String): ResponseEntity<ReadResponse> {
+        val readResponse: ReadResponse = taskRequestFacade.read(taskRequestNumber)
+        return ResponseEntity.ok(readResponse)
+    }
+
+    @GetMapping("\${task-request.read-all}")
+    fun readAll(readAllRequest: ReadAllRequest): ResponseEntity<Page<ReadAllResponse>> {
+        val readAllResponse: Page<ReadAllResponse> = taskRequestFacade.readAll(readAllRequest)
+        return ResponseEntity.ok(readAllResponse)
     }
 
     @PatchMapping("\${task-request.update}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun update(
         @PathVariable taskRequestNumber: String,
-        @RequestPart taskRequestSaveRequest: TaskRequestSaveRequest,
+        @RequestPart saveRequest: SaveRequest,
         @RequestPart @Size(max = 5) printDesigns: List<MultipartFile>?,
-    ): ResponseEntity<TaskRequestSaveResponse> {
-        taskRequestSaveRequest.printDesigns = printDesigns
-        val taskRequestSaveResponse: TaskRequestSaveResponse =
-            taskRequestFacade.update(taskRequestNumber, taskRequestSaveRequest)
-        return ResponseEntity.ok(taskRequestSaveResponse)
+    ): ResponseEntity<SaveResponse> {
+        saveRequest.printDesigns = printDesigns
+        val saveResponse: SaveResponse = taskRequestFacade.update(taskRequestNumber, saveRequest)
+        return ResponseEntity.ok(saveResponse)
     }
 
     @DeleteMapping("\${task-request.delete}")
@@ -60,7 +68,8 @@ class TaskRequestApi(
     }
 
     @GetMapping("\${task-request.search}")
-    fun search(@ModelAttribute taskRequestSearchRequest: TaskRequestSearchRequest): Page<TaskRequestSearchResponse> {
-        return taskRequestFacade.search(taskRequestSearchRequest)
+    fun search(@ModelAttribute searchRequest: SearchRequest): ResponseEntity<Page<SearchResponse>> {
+        val searchResponse: Page<SearchResponse> = taskRequestFacade.search(searchRequest)
+        return ResponseEntity.ok(searchResponse)
     }
 }

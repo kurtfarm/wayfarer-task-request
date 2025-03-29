@@ -20,11 +20,13 @@ import com.dkprint.wayfarer.task.request.domain.processing.application.Processin
 import com.dkprint.wayfarer.task.request.domain.processing.domain.Processing
 import com.dkprint.wayfarer.task.request.domain.processing.dto.ProcessingDto
 import com.dkprint.wayfarer.task.request.domain.slitting.application.SlittingService
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestReadResponse
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSaveRequest
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSaveResponse
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSearchRequest
-import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.TaskRequestSearchResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.request.ReadAllRequest
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.request.SaveRequest
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.request.SearchRequest
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.ReadAllResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.ReadResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.SaveResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.SearchResponse
 import com.dkprint.wayfarer.task.request.domain.task.request.domain.TaskRequest
 import java.time.LocalDate
 import org.springframework.data.domain.Page
@@ -34,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class TaskRequestFacade(
     private val taskRequestService: TaskRequestService,
+    private val searchService: SearchService,
     private val detailsService: DetailsService,
     private val fabricMappingService: FabricMappingService,
     private val printingService: PrintingService,
@@ -48,10 +51,10 @@ class TaskRequestFacade(
     // private val vendorSdk: VendorSdk,
 ) {
     @Transactional
-    fun create(taskRequestSaveRequest: TaskRequestSaveRequest): TaskRequestSaveResponse {
-        val taskRequest: TaskRequest = taskRequestService.create(taskRequestSaveRequest)
-        saveData(taskRequestSaveRequest, taskRequest.id)
-        return TaskRequestSaveResponse(
+    fun create(saveRequest: SaveRequest): SaveResponse {
+        val taskRequest: TaskRequest = taskRequestService.create(saveRequest)
+        createData(saveRequest, taskRequest.id)
+        return SaveResponse(
             id = taskRequest.id,
             taskRequestNumber = taskRequest.taskRequestNumber,
             status = true,
@@ -59,7 +62,7 @@ class TaskRequestFacade(
     }
 
     @Transactional
-    fun read(taskRequestNumber: String): TaskRequestReadResponse {
+    fun read(taskRequestNumber: String): ReadResponse {
         val taskRequest: TaskRequest = taskRequestService.read(taskRequestNumber)
         val taskRequestId: Long = taskRequest.id
 
@@ -100,7 +103,7 @@ class TaskRequestFacade(
         val etc2VendorName: String = "대경" // vendorSdk.findByVendorId(etc2.vendorId)
         val processingVendorName: String = "대경" // vendorSdk.findByVendorId(processing.vendorId)
 
-        return TaskRequestReadResponse(
+        return ReadResponse(
             detailsDto = DetailsDto.of(details, detailsVendorName),
             fabricDtos = fabricDtos,
             printingDto = PrintingDto.of(printing, copperplateName),
@@ -116,27 +119,8 @@ class TaskRequestFacade(
     }
 
     @Transactional
-    fun update(taskRequestNumber: String, taskRequestSaveRequest: TaskRequestSaveRequest): TaskRequestSaveResponse {
-        val taskRequest: TaskRequest = taskRequestService.update(taskRequestNumber, taskRequestSaveRequest)
-        updateData(taskRequestSaveRequest, taskRequest.id)
-        return TaskRequestSaveResponse(
-            id = taskRequest.id,
-            taskRequestNumber = taskRequest.taskRequestNumber,
-            status = true,
-        )
-    }
-
-    @Transactional
-    fun delete(taskRequestNumber: String) {
-        val taskRequestId: Long = taskRequestService.delete(taskRequestNumber)
-        deleteData(taskRequestId)
-    }
-
-    @Transactional
-    fun search(
-        taskRequestSearchRequest: TaskRequestSearchRequest,
-    ): Page<TaskRequestSearchResponse> {
-        val taskRequests: Page<TaskRequest> = taskRequestService.search(taskRequestSearchRequest)
+    fun readAll(readAllRequest: ReadAllRequest): Page<ReadAllResponse> {
+        val taskRequests: Page<TaskRequest> = taskRequestService.readAll(readAllRequest)
 
         return taskRequests.map {
             val taskRequestId: Long = it.id
@@ -155,10 +139,9 @@ class TaskRequestFacade(
                 "1차 거래처",
                 "2차 거래처",
             ).distinct() // laminations.map { lamination ->vendorSdk.findVendorNameById(lamination.vendorId) }
-
             val processingVendorName: String = "대경" // vendorSdk.findVendorNameById(processing.vendorId)
 
-            TaskRequestSearchResponse(
+            ReadAllResponse(
                 taskRequestId = taskRequestId,
                 orderDate = details.orderDate,
                 taskRequestNumber = it.taskRequestNumber,
@@ -174,16 +157,72 @@ class TaskRequestFacade(
         }
     }
 
-    private fun saveData(taskRequestSaveRequest: TaskRequestSaveRequest, taskRequestId: Long) {
-        val productName: String = taskRequestSaveRequest.detailsDto.productName
+    @Transactional
+    fun update(taskRequestNumber: String, saveRequest: SaveRequest): SaveResponse {
+        val taskRequest: TaskRequest = taskRequestService.update(taskRequestNumber, saveRequest)
+        updateData(saveRequest, taskRequest.id)
+        return SaveResponse(
+            id = taskRequest.id,
+            taskRequestNumber = taskRequest.taskRequestNumber,
+            status = true,
+        )
+    }
 
-        detailsService.create(taskRequestId, taskRequestSaveRequest.detailsDto)
-        taskRequestSaveRequest.fabricDtos
+    @Transactional
+    fun delete(taskRequestNumber: String) {
+        val taskRequestId: Long = taskRequestService.delete(taskRequestNumber)
+        deleteData(taskRequestId)
+    }
+
+    @Transactional
+    fun search(searchRequest: SearchRequest): Page<SearchResponse> {
+        val taskRequests: Page<TaskRequest> = searchService.search(searchRequest)
+
+        return taskRequests.map {
+            val taskRequestId: Long = it.id
+            val details: Details = detailsService.find(taskRequestId)
+            val productStandard: String =
+                "${details.standardLength} * ${details.standardWidth} * ${details.standardHeight}"
+            val laminations: List<Lamination> = laminationService.find(taskRequestId)
+            val processing: Processing = processingService.find(taskRequestId)
+            val code: String = "ABCDEF" // codeSdk.findById(it.codeId)
+            val fabricExpectedArrivalDate: LocalDate = LocalDate.now() // fabricSdk.findArrivalDateById(it.id)
+            val copperplateExpectedArrivalDate: LocalDate = LocalDate.now() // copperplateSdk.findArrivalDateById(it.id)
+            val productVendorName: String = "대경" // vendorSdk.findVendorNameById(details.vendorId)
+            val laminationVendorNames: List<String> = listOf(
+                "1차 거래처",
+                "2차 거래처",
+                "1차 거래처",
+                "2차 거래처",
+            ).distinct() // laminations.map { lamination ->vendorSdk.findVendorNameById(lamination.vendorId) }
+            val processingVendorName: String = "대경" // vendorSdk.findVendorNameById(processing.vendorId)
+
+            SearchResponse(
+                taskRequestId = taskRequestId,
+                orderDate = details.orderDate,
+                taskRequestNumber = it.taskRequestNumber,
+                productCode = code,
+                productName = details.productName,
+                productStandard = productStandard,
+                fabricExpectedArrivalDate = fabricExpectedArrivalDate,
+                copperplateExpectedArrivalDate = copperplateExpectedArrivalDate,
+                productVendorName = productVendorName,
+                laminationVendorNames = laminationVendorNames,
+                processingVendorName = processingVendorName,
+            )
+        }
+    }
+
+    private fun createData(saveRequest: SaveRequest, taskRequestId: Long) {
+        val productName: String = saveRequest.detailsDto.productName
+
+        detailsService.create(taskRequestId, saveRequest.detailsDto)
+        saveRequest.fabricDtos
             .forEach { fabricDto ->
                 fabricMappingService.create(taskRequestId, fabricDto)
             }
 
-        with(taskRequestSaveRequest) {
+        with(saveRequest) {
             printingDto?.let { printingService.create(taskRequestId, it) }
             laminationDtos?.let {
                 it.forEach { laminationDto ->
@@ -201,17 +240,17 @@ class TaskRequestFacade(
         }
     }
 
-    private fun updateData(taskRequestSaveRequest: TaskRequestSaveRequest, taskRequestId: Long) {
-        val productName: String = taskRequestSaveRequest.detailsDto.productName
+    private fun updateData(saveRequest: SaveRequest, taskRequestId: Long) {
+        val productName: String = saveRequest.detailsDto.productName
 
-        detailsService.create(taskRequestId, taskRequestSaveRequest.detailsDto)
+        detailsService.create(taskRequestId, saveRequest.detailsDto)
         fabricMappingService.delete(taskRequestId)
-        taskRequestSaveRequest.fabricDtos
+        saveRequest.fabricDtos
             .forEach { fabricDto ->
                 fabricMappingService.create(taskRequestId, fabricDto)
             }
 
-        with(taskRequestSaveRequest) {
+        with(saveRequest) {
             printingDto?.let { printingService.create(taskRequestId, it) }
             laminationService.delete(taskRequestId)
             laminationDtos?.let {

@@ -1,7 +1,6 @@
 package com.dkprint.wayfarer.task.request.domain.printing.application
 
 import com.dkprint.wayfarer.task.request.domain.copperplate.mapping.application.CopperplateMappingService
-import com.dkprint.wayfarer.task.request.domain.copperplate.mapping.dao.CopperplateMappingRepository
 import com.dkprint.wayfarer.task.request.domain.copperplate.mapping.domain.CopperplateMapping
 import com.dkprint.wayfarer.task.request.domain.printing.dao.PrintingRepository
 import com.dkprint.wayfarer.task.request.domain.printing.domain.Printing

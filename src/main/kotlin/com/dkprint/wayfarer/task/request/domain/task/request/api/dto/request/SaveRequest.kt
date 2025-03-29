@@ -1,4 +1,4 @@
-package com.dkprint.wayfarer.task.request.domain.task.request.api.dto
+package com.dkprint.wayfarer.task.request.domain.task.request.api.dto.request
 
 import com.dkprint.wayfarer.task.request.domain.details.dto.DetailsDto
 import com.dkprint.wayfarer.task.request.domain.etc.dto.EtcDto
@@ -9,7 +9,7 @@ import com.dkprint.wayfarer.task.request.domain.processing.dto.ProcessingDto
 import com.dkprint.wayfarer.task.request.domain.slitting.dto.SlittingDto
 import org.springframework.web.multipart.MultipartFile
 
-data class TaskRequestSaveRequest(
+data class SaveRequest(
     val isPrint: Boolean,
     val isLamination: Boolean,
     val isProcessing: Boolean,
