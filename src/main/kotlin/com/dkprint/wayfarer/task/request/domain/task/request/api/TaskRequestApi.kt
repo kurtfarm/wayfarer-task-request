@@ -7,10 +7,10 @@ import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.Re
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.ReadResponse
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.SaveResponse
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.SearchResponse
+import com.dkprint.wayfarer.task.request.domain.task.request.api.path.ApiPath
 import com.dkprint.wayfarer.task.request.domain.task.request.application.TaskRequestFacade
 import jakarta.validation.constraints.Size
 import java.net.URI
-import org.springframework.data.domain.Page
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -27,47 +27,52 @@ import org.springframework.web.multipart.MultipartFile
 class TaskRequestApi(
     private val taskRequestFacade: TaskRequestFacade,
 ) {
-    @PostMapping("\${task-request.create}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    companion object {
+        private const val IMAGE_SIZE: Int = 5
+    }
+
+    @PostMapping(ApiPath.TaskRequest.CREATE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun create(
         @RequestPart saveRequest: SaveRequest,
-        @RequestPart @Size(max = 5) printDesigns: List<MultipartFile>?,
+        @RequestPart @Size(max = IMAGE_SIZE) printDesigns: List<MultipartFile>?,
     ): ResponseEntity<SaveResponse> {
         saveRequest.printDesigns = printDesigns
         val saveResponse: SaveResponse = taskRequestFacade.create(saveRequest)
-        return ResponseEntity.created(URI.create("/api/task-request/${saveResponse.taskRequestNumber}"))
-            .body(saveResponse)
+        return ResponseEntity.created(
+            URI.create(ApiPath.TaskRequest.READ.replace("{taskRequestNumber}", saveResponse.taskRequestNumber))
+        ).body(saveResponse)
     }
 
-    @GetMapping("\${task-request.read}")
+    @GetMapping(ApiPath.TaskRequest.READ)
     fun read(@PathVariable taskRequestNumber: String): ResponseEntity<ReadResponse> {
         val readResponse: ReadResponse = taskRequestFacade.read(taskRequestNumber)
         return ResponseEntity.ok(readResponse)
     }
 
-    @GetMapping("\${task-request.read-all}")
-    fun readAll(readAllRequest: ReadAllRequest): ResponseEntity<List<ReadAllResponse>> {
+    @GetMapping(ApiPath.TaskRequest.READ_ALL)
+    fun readAll(@ModelAttribute readAllRequest: ReadAllRequest): ResponseEntity<List<ReadAllResponse>> {
         val readAllResponse: List<ReadAllResponse> = taskRequestFacade.readAll(readAllRequest)
         return ResponseEntity.ok(readAllResponse)
     }
 
-    @PatchMapping("\${task-request.update}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PatchMapping(ApiPath.TaskRequest.UPDATE, consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun update(
         @PathVariable taskRequestNumber: String,
         @RequestPart saveRequest: SaveRequest,
-        @RequestPart @Size(max = 5) printDesigns: List<MultipartFile>?,
+        @RequestPart @Size(max = IMAGE_SIZE) printDesigns: List<MultipartFile>?,
     ): ResponseEntity<SaveResponse> {
         saveRequest.printDesigns = printDesigns
         val saveResponse: SaveResponse = taskRequestFacade.update(taskRequestNumber, saveRequest)
         return ResponseEntity.ok(saveResponse)
     }
 
-    @DeleteMapping("\${task-request.delete}")
+    @DeleteMapping(ApiPath.TaskRequest.DELETE)
     fun delete(@PathVariable taskRequestNumber: String): ResponseEntity<Void> {
         taskRequestFacade.delete(taskRequestNumber)
         return ResponseEntity.noContent().build()
     }
 
-    @GetMapping("\${task-request.search}")
+    @GetMapping(ApiPath.TaskRequest.SEARCH)
     fun search(@ModelAttribute searchRequest: SearchRequest): ResponseEntity<List<SearchResponse>> {
         val searchResponse: List<SearchResponse> = taskRequestFacade.search(searchRequest)
         return ResponseEntity.ok(searchResponse)
