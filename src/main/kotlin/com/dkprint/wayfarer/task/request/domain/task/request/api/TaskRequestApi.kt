@@ -45,8 +45,8 @@ class TaskRequestApi(
     }
 
     @GetMapping("\${task-request.read-all}")
-    fun readAll(readAllRequest: ReadAllRequest): ResponseEntity<Page<ReadAllResponse>> {
-        val readAllResponse: Page<ReadAllResponse> = taskRequestFacade.readAll(readAllRequest)
+    fun readAll(readAllRequest: ReadAllRequest): ResponseEntity<List<ReadAllResponse>> {
+        val readAllResponse: List<ReadAllResponse> = taskRequestFacade.readAll(readAllRequest)
         return ResponseEntity.ok(readAllResponse)
     }
 
@@ -68,8 +68,8 @@ class TaskRequestApi(
     }
 
     @GetMapping("\${task-request.search}")
-    fun search(@ModelAttribute searchRequest: SearchRequest): ResponseEntity<Page<SearchResponse>> {
-        val searchResponse: Page<SearchResponse> = taskRequestFacade.search(searchRequest)
+    fun search(@ModelAttribute searchRequest: SearchRequest): ResponseEntity<List<SearchResponse>> {
+        val searchResponse: List<SearchResponse> = taskRequestFacade.search(searchRequest)
         return ResponseEntity.ok(searchResponse)
     }
 }

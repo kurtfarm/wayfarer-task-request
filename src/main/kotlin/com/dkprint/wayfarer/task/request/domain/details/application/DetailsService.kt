@@ -3,9 +3,10 @@ package com.dkprint.wayfarer.task.request.domain.details.application
 import com.dkprint.wayfarer.task.request.domain.details.dao.DetailsRepository
 import com.dkprint.wayfarer.task.request.domain.details.domain.Details
 import com.dkprint.wayfarer.task.request.domain.details.dto.DetailsDto
+import com.dkprint.wayfarer.task.request.domain.task.request.domain.TaskRequest
+import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,7 +22,11 @@ class DetailsService(
 
     fun create(taskRequestId: Long, detailsDto: DetailsDto) {
         val vendorId: Long = 1L // vendorSdk.findIdByName(detailsDto.vendorName)
-        val details: Details = Details.of(taskRequestId, vendorId, detailsDto)
+        val details: Details = Details.of(
+            taskRequestId,
+            vendorId,
+            detailsDto,
+        )
         detailsRepository.save(details)
     }
 
@@ -34,23 +39,38 @@ class DetailsService(
             ?: throw IllegalArgumentException("작업 의뢰서 id: $taskRequestId 조회 오류")
     }
 
-    fun findByProductName(productName: String, pageable: Pageable): Page<Details> {
-        return detailsRepository.findByProductNameContainingIgnoreCase(productName, pageable)
-    }
-
-    fun findByProductStandard(keyword: String, pageable: Pageable): Page<Details> {
-        val standardValues: List<Int> = keyword.split("*")
-            .map { it.trim().toInt() }
-
-        return detailsRepository.findByStandardWidthAndStandardLengthAndStandardHeight(
-            standardValues[WIDTH_INDEX],
-            standardValues[LENGTH_INDEX],
-            standardValues[HEIGHT_INDEX],
-            pageable,
+    fun findByProductName(lastId: Long, productName: String): List<Details> {
+        return detailsRepository.findTop20ByTaskRequestIdGreaterThanAndProductNameContainingIgnoreCase(
+            lastId,
+            productName,
         )
     }
 
-    fun findByVendorId(vendorId: Long, pageable: Pageable): Page<Details> {
-        return detailsRepository.findByVendorId(vendorId, pageable)
+    fun findByProductStandard(lastId: Long, keyword: String): List<Details> {
+        val standardValues: List<Int> = keyword.split("*")
+            .map { it.trim().toInt() }
+
+        return detailsRepository.findTop20ByTaskRequestIdGreaterThanAndStandardWidthAndStandardLengthAndStandardHeight(
+            lastId,
+            standardValues[WIDTH_INDEX],
+            standardValues[LENGTH_INDEX],
+            standardValues[HEIGHT_INDEX],
+        )
+    }
+
+    fun findByVendorId(lastId: Long, vendorId: Long): List<Details> {
+        return detailsRepository.findTop20ByTaskRequestIdGreaterThanAndVendorId(lastId, vendorId)
+    }
+
+    fun findByOrderDateBetween(
+        lastId: Long,
+        start: LocalDate,
+        end: LocalDate,
+    ): List<Details> {
+        return detailsRepository.findTop20ByTaskRequestIdGreaterThanAndOrderDateBetweenOrderByTaskRequestIdAsc(
+            lastId,
+            start,
+            end,
+        )
     }
 }
