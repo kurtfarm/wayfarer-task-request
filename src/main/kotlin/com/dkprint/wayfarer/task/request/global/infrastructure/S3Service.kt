@@ -8,14 +8,11 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
-import software.amazon.awssdk.services.s3.model.CreateBucketRequest
 import software.amazon.awssdk.services.s3.model.Delete
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
-import software.amazon.awssdk.services.s3.model.HeadBucketRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsResponse
-import software.amazon.awssdk.services.s3.model.NoSuchBucketException
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.model.S3Exception
@@ -30,12 +27,6 @@ class S3Service(
     @Value("\${s3.bucketName}")
     private val bucketName: String,
 ) {
-    fun checkBucket() {
-        if (!isBucketExists(bucketName)) {
-            createBucket(bucketName)
-        }
-    }
-
     fun upload(
         id: Long,
         productName: String,
@@ -101,27 +92,5 @@ class S3Service(
         } catch (e: Exception) {
             throw RuntimeException("S3 삭제 오류: ${e.message}")
         }
-    }
-
-    private fun isBucketExists(bucketName: String): Boolean {
-        try {
-            val headBucketRequest: HeadBucketRequest = HeadBucketRequest.builder()
-                .bucket(bucketName)
-                .build()
-
-            s3Client.headBucket(headBucketRequest)
-
-            return true
-        } catch (exception: NoSuchBucketException) {
-            return false
-        }
-    }
-
-    private fun createBucket(bucketName: String) {
-        val createBucketRequest: CreateBucketRequest = CreateBucketRequest.builder()
-            .bucket(bucketName)
-            .build()
-
-        s3Client.createBucket(createBucketRequest)
     }
 }
