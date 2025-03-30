@@ -3,6 +3,7 @@ package com.dkprint.wayfarer.task.request.domain.print.design.application
 import com.dkprint.wayfarer.task.request.domain.print.design.dao.PrintDesignRepository
 import com.dkprint.wayfarer.task.request.domain.print.design.domain.PrintDesign
 import com.dkprint.wayfarer.task.request.global.infrastructure.S3Service
+import java.util.concurrent.CompletableFuture
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
@@ -15,11 +16,17 @@ class PrintDesignService(
         taskRequestId: Long,
         productName: String,
         file: MultipartFile,
-    ) {
-        val directoryPath: String = s3Service.upload(taskRequestId, productName, file)
-        val preSignedUrl: String = s3Service.generatePresignedUrl(directoryPath)
-        val printDesign: PrintDesign = PrintDesign(taskRequestId = taskRequestId, printDesign = preSignedUrl)
-        printDesignRepository.save(printDesign)
+    ): CompletableFuture<Void> {
+        val directoryPath: CompletableFuture<String> = s3Service.upload(taskRequestId, productName, file)
+
+        return directoryPath.thenCompose {
+            s3Service.generatePresignedUrl(CompletableFuture.completedFuture(it))
+        }.thenAccept {
+            val printDesign = PrintDesign(taskRequestId = taskRequestId, printDesign = it)
+            printDesignRepository.save(printDesign)
+        }.exceptionally {
+            throw RuntimeException("S3 저장 오류: ${it.message}")
+        }
     }
 
     fun delete(taskRequestId: Long) {

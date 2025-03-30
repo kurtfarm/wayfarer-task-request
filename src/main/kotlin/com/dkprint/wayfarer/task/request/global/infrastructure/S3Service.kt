@@ -3,16 +3,16 @@ package com.dkprint.wayfarer.task.request.global.infrastructure
 import com.dkprint.wayfarer.task.request.global.exception.S3ClientException
 import com.dkprint.wayfarer.task.request.global.exception.S3ServerException
 import java.time.Duration
+import java.util.concurrent.CompletableFuture
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import software.amazon.awssdk.core.sync.RequestBody
-import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.core.async.AsyncRequestBody
+import software.amazon.awssdk.services.s3.S3AsyncClient
 import software.amazon.awssdk.services.s3.model.Delete
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest
-import software.amazon.awssdk.services.s3.model.ListObjectsResponse
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.model.S3Exception
@@ -21,7 +21,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 
 @Service
 class S3Service(
-    private val s3Client: S3Client,
+    private val s3AsyncClient: S3AsyncClient,
     private val s3Presigner: S3Presigner,
 
     @Value("\${s3.bucketName}")
@@ -31,66 +31,86 @@ class S3Service(
         id: Long,
         productName: String,
         file: MultipartFile,
-    ): String {
+    ): CompletableFuture<String> {
         val directoryPath = "$id/$productName/${file.originalFilename}"
-
-        try {
-            val putObjectRequest: PutObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
-                .key(directoryPath)
-                .contentType(file.contentType)
-                .build()
-
-            val requestBody: RequestBody = RequestBody.fromInputStream(file.inputStream, file.size)
-
-            s3Client.putObject(putObjectRequest, requestBody)
-        } catch (e: S3Exception) {
-            throw S3ServerException("S3 Server Exception: ${e.message}")
-        } catch (e: Exception) {
-            throw S3ClientException("S3 Client Exception: ${e.message}")
-        }
-
-        return directoryPath
-    }
-
-    fun generatePresignedUrl(
-        directoryPath: String,
-    ): String {
-        val getObjectRequest: GetObjectRequest = GetObjectRequest.builder()
+        val putObjectRequest: PutObjectRequest = PutObjectRequest.builder()
             .bucket(bucketName)
             .key(directoryPath)
+            .contentType(file.contentType)
             .build()
 
-        val presignedGetObjectRequest: PresignedGetObjectRequest = s3Presigner.presignGetObject { request ->
-            request.getObjectRequest(getObjectRequest)
-            request.signatureDuration(Duration.ofDays(7))
-        }
+        val bytes: ByteArray = file.bytes
+        val asyncRequestBody: AsyncRequestBody = AsyncRequestBody.fromBytes(bytes)
 
-        return presignedGetObjectRequest.url().toString()
-    }
+        val future: CompletableFuture<String> = CompletableFuture<String>()
 
-    fun delete(id: Long) {
-        val prefix: String = "$id/"
-        try {
-            val listObjectRequest: ListObjectsRequest = ListObjectsRequest.builder()
-                .bucket(bucketName)
-                .prefix(prefix)
-                .build()
-            val listedObjects: ListObjectsResponse = s3Client.listObjects(listObjectRequest)
-            val identifiers: List<ObjectIdentifier> = listedObjects.contents().map {
-                ObjectIdentifier.builder()
-                    .key(it.key())
-                    .build()
+        s3AsyncClient.putObject(putObjectRequest, asyncRequestBody)
+            .thenAccept {
+                future.complete(directoryPath)
+            }.exceptionally {
+                when (it) {
+                    is S3Exception -> future.completeExceptionally(S3ServerException("S3 Server Exception: ${it.message}"))
+                    else -> future.completeExceptionally(S3ClientException("S3 Client Exception: ${it.message}"))
+                }
+                null
             }
 
-            val delete: Delete = Delete.builder().objects(identifiers).build()
-            val deleteObjectRequest: DeleteObjectsRequest = DeleteObjectsRequest.builder()
+        return future
+    }
+
+    fun generatePresignedUrl(directoryPathFuture: CompletableFuture<String>): CompletableFuture<String> {
+        return directoryPathFuture.thenApply {
+            val getObjectRequest: GetObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
-                .delete(delete)
+                .key(it)
                 .build()
-            s3Client.deleteObjects(deleteObjectRequest)
-        } catch (e: Exception) {
-            throw RuntimeException("S3 삭제 오류: ${e.message}")
+
+            val presignedGetObjectRequest: PresignedGetObjectRequest = s3Presigner.presignGetObject { request ->
+                request.getObjectRequest(getObjectRequest)
+                request.signatureDuration(Duration.ofDays(7))
+            }
+
+            presignedGetObjectRequest.url().toString()
         }
+    }
+
+    fun delete(id: Long): CompletableFuture<Void> {
+        val prefix: String = "$id/"
+        val future: CompletableFuture<Void> = CompletableFuture<Void>()
+        val listObjectRequest: ListObjectsRequest = ListObjectsRequest.builder()
+            .bucket(bucketName)
+            .prefix(prefix)
+            .build()
+
+        s3AsyncClient.listObjects(listObjectRequest)
+            .thenAccept { listedObjects ->
+                val identifiers: List<ObjectIdentifier> = listedObjects.contents().map {
+                    ObjectIdentifier.builder()
+                        .key(it.key())
+                        .build()
+                }
+
+                val delete: Delete = Delete.builder()
+                    .objects(identifiers)
+                    .build()
+
+                val deleteObjectRequest: DeleteObjectsRequest = DeleteObjectsRequest.builder()
+                    .bucket(bucketName)
+                    .delete(delete)
+                    .build()
+
+                s3AsyncClient.deleteObjects(deleteObjectRequest)
+                    .thenAccept {
+                        future.complete(null)
+                    }.exceptionally {
+                        future.completeExceptionally(RuntimeException("S3 삭제 오류: ${it.message}"))
+                        null
+                    }
+            }.exceptionally {
+                future.completeExceptionally(RuntimeException("S3 리스트 오류: ${it.message}"))
+                null
+            }
+
+        return future
     }
 }
