@@ -16,7 +16,6 @@ class PrintDesignService(
         productName: String,
         file: MultipartFile,
     ) {
-        s3Service.checkBucket()
         val directoryPath: String = s3Service.upload(taskRequestId, productName, file)
         val preSignedUrl: String = s3Service.generatePresignedUrl(directoryPath)
         val printDesign: PrintDesign = PrintDesign(taskRequestId = taskRequestId, printDesign = preSignedUrl)
