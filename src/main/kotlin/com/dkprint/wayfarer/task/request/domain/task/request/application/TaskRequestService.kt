@@ -7,9 +7,6 @@ import com.dkprint.wayfarer.task.request.domain.task.request.domain.TaskRequest
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,10 +15,6 @@ class TaskRequestService(
     // private val searchService: SearchService,
     // private val codeSdk: CodeSdk,
 ) {
-    companion object {
-        private const val PAGE_SIZE: Int = 20
-    }
-
     fun create(saveRequest: SaveRequest): TaskRequest {
         val taskRequest: TaskRequest = TaskRequest.from(saveRequest)
         taskRequest.codeId = 1L // codeSdk.generate()
@@ -38,9 +31,8 @@ class TaskRequestService(
         return taskRequest
     }
 
-    fun readAll(readAllRequest: ReadAllRequest): Page<TaskRequest> {
-        val pageable: Pageable = PageRequest.of(readAllRequest.page, PAGE_SIZE)
-        return taskRequestRepository.findAllByOrderByIdAsc(pageable)
+    fun readAll(readAllRequest: ReadAllRequest): List<TaskRequest> {
+        return taskRequestRepository.findTop20ByIdGreaterThanOrderByIdAsc(readAllRequest.lastId)
     }
 
     fun update(taskRequestNumber: String, saveRequest: SaveRequest): TaskRequest {
@@ -59,19 +51,15 @@ class TaskRequestService(
         return taskRequest.id
     }
 
-    fun findByCreatedAtBetween(start: LocalDateTime, end: LocalDateTime, pageable: Pageable): Page<TaskRequest> {
-        return taskRequestRepository.findByCreatedAtBetweenOrderByIdAsc(start, end, pageable)
+    fun findByIdIn(lastId: Long, taskRequestIds: List<Long>): List<TaskRequest> {
+        return taskRequestRepository.findTop20ByIdGreaterThanAndIdInOrderByIdAsc(lastId, taskRequestIds)
     }
 
-    fun findByIdIn(taskRequestIds: List<Long>, pageable: Pageable): Page<TaskRequest> {
-        return taskRequestRepository.findByIdInOrderByIdAsc(taskRequestIds, pageable)
+    fun findByCodeId(lastId: Long, codeId: Long): List<TaskRequest> {
+        return taskRequestRepository.findTop20ByIdGreaterThanAndCodeIdOrderByIdAsc(lastId, codeId)
     }
 
-    fun findByCodeId(codeId: Long, pageable: Pageable): Page<TaskRequest> {
-        return taskRequestRepository.findByCodeIdOrderByIdAsc(codeId, pageable)
-    }
-
-    fun findByTaskRequestNumber(keyword: String, pageable: Pageable): Page<TaskRequest> {
-        return taskRequestRepository.findByTaskRequestNumberOrderByIdAsc(keyword, pageable)
+    fun findByTaskRequestNumber(lastId: Long, keyword: String): List<TaskRequest> {
+        return taskRequestRepository.findTop20ByIdGreaterThanAndTaskRequestNumberOrderByIdAsc(lastId, keyword)
     }
 }
