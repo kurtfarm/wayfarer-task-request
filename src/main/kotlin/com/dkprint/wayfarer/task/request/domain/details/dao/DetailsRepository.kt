@@ -2,6 +2,8 @@ package com.dkprint.wayfarer.task.request.domain.details.dao
 
 import com.dkprint.wayfarer.task.request.domain.details.domain.Details
 import java.time.LocalDate
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
@@ -17,5 +19,8 @@ interface DetailsRepository : JpaRepository<Details, Long> {
 
     fun findByVendorId(vendorId: Long): List<Details>
 
-    fun findByOrderDateBetween(start: LocalDate, end: LocalDate): List<Details>
+    fun findByOrderDateBetween(
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): List<Details>
 }

@@ -14,7 +14,6 @@ import java.time.LocalDate
 class Etc(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     val id: Long = 0L,
 
     @Column(name = "task_request_id")

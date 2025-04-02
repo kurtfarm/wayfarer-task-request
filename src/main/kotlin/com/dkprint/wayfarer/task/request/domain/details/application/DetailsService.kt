@@ -5,6 +5,8 @@ import com.dkprint.wayfarer.task.request.domain.details.domain.Details
 import com.dkprint.wayfarer.task.request.domain.details.dto.DetailsDto
 import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -37,11 +39,11 @@ class DetailsService(
             ?: throw IllegalArgumentException("작업 의뢰서 id: $taskRequestId 조회 오류")
     }
 
-    fun findByProductName(page: Int, productName: String): List<Details> {
+    fun findByProductName(productName: String): List<Details> {
         return detailsRepository.findByProductNameContainingIgnoreCase(productName)
     }
 
-    fun findByProductStandard(lastId: Int, keyword: String): List<Details> {
+    fun findByProductStandard(keyword: String): List<Details> {
         val standardValues: List<Int> = keyword.split("*")
             .map { it.trim().toInt() }
 
@@ -56,7 +58,10 @@ class DetailsService(
         return detailsRepository.findByVendorId(vendorId)
     }
 
-    fun findByOrderDateBetween(start: LocalDate, end: LocalDate): List<Details> {
-        return detailsRepository.findByOrderDateBetween(start, end)
+    fun findByOrderDateBetween(
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): List<Details> {
+        return detailsRepository.findByOrderDateBetween(startDate, endDate)
     }
 }

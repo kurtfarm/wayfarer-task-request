@@ -1,13 +1,6 @@
 server:
   port: 8080
 
-task-request:
-  create: /api/task-request
-  read: /api/task-request/{taskRequestNumber}
-  search: /api/task-request
-  update: /api/task-request/{taskRequestNumber}
-  delete: /api/task-request/{taskRequestNumber}
-
 spring:
   application:
     name: wayfarer-task-request

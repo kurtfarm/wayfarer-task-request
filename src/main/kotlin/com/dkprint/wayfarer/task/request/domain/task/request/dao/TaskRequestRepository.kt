@@ -9,8 +9,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface TaskRequestRepository : JpaRepository<TaskRequest, Long> {
     fun findByTaskRequestNumber(taskRequestNumber: String): TaskRequest?
-    fun findAllByTaskRequestNumber(taskRequestNumber: String, pageable: Pageable): Page<TaskRequest>
-    fun findByCodeId(codeId: Long, pageable: Pageable): Page<TaskRequest>
+    fun findByCodeId(codeId: Long): List<TaskRequest>
     fun findAllByOrderByIdAsc(pageable: Pageable): Page<TaskRequest>
     fun findByIdIn(taskRequestIds: List<Long>, pageable: Pageable): Page<TaskRequest>
 }

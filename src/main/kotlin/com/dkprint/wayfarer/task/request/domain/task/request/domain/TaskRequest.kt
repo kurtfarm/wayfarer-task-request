@@ -14,7 +14,6 @@ import jakarta.persistence.Table
 class TaskRequest(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     val id: Long = 0L,
 
     @Column(name = "code_id")
