@@ -3,7 +3,7 @@ package com.dkprint.wayfarer.task.request.domain.task.request.api.dto.request
 import java.time.LocalDate
 
 data class SearchRequest(
-    val lastId: Long = 0,
+    val page: Int = 0,
 
     val searchType: String? = null,
     val keyword: String? = null,
