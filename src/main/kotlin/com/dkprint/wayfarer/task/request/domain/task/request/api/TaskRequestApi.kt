@@ -11,6 +11,7 @@ import com.dkprint.wayfarer.task.request.domain.task.request.api.path.ApiPath
 import com.dkprint.wayfarer.task.request.domain.task.request.application.TaskRequestFacade
 import jakarta.validation.constraints.Size
 import java.net.URI
+import org.springframework.data.domain.Page
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -50,8 +51,8 @@ class TaskRequestApi(
     }
 
     @GetMapping(ApiPath.TaskRequest.READ_ALL)
-    fun readAll(@ModelAttribute readAllRequest: ReadAllRequest): ResponseEntity<List<ReadAllResponse>> {
-        val readAllResponse: List<ReadAllResponse> = taskRequestFacade.readAll(readAllRequest)
+    fun readAll(@ModelAttribute readAllRequest: ReadAllRequest): ResponseEntity<Page<ReadAllResponse>> {
+        val readAllResponse: Page<ReadAllResponse> = taskRequestFacade.readAll(readAllRequest)
         return ResponseEntity.ok(readAllResponse)
     }
 
@@ -73,8 +74,8 @@ class TaskRequestApi(
     }
 
     @GetMapping(ApiPath.TaskRequest.SEARCH)
-    fun search(@ModelAttribute searchRequest: SearchRequest): ResponseEntity<List<SearchResponse>> {
-        val searchResponse: List<SearchResponse> = taskRequestFacade.search(searchRequest)
+    fun search(@ModelAttribute searchRequest: SearchRequest): ResponseEntity<Page<SearchResponse>> {
+        val searchResponse: Page<SearchResponse> = taskRequestFacade.search(searchRequest)
         return ResponseEntity.ok(searchResponse)
     }
 }

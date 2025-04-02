@@ -29,6 +29,7 @@ import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.Sa
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.response.SearchResponse
 import com.dkprint.wayfarer.task.request.domain.task.request.domain.TaskRequest
 import java.time.LocalDate
+import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -118,8 +119,8 @@ class TaskRequestFacade(
     }
 
     @Transactional
-    fun readAll(readAllRequest: ReadAllRequest): List<ReadAllResponse> {
-        val taskRequests: List<TaskRequest> = taskRequestService.readAll(readAllRequest)
+    fun readAll(readAllRequest: ReadAllRequest): Page<ReadAllResponse> {
+        val taskRequests: Page<TaskRequest> = taskRequestService.readAll(readAllRequest)
 
         return taskRequests.map {
             val taskRequestId: Long = it.id
@@ -174,8 +175,8 @@ class TaskRequestFacade(
     }
 
     @Transactional
-    fun search(searchRequest: SearchRequest): List<SearchResponse> {
-        val taskRequests: List<TaskRequest> = searchService.search(searchRequest)
+    fun search(searchRequest: SearchRequest): Page<SearchResponse> {
+        val taskRequests: Page<TaskRequest> = searchService.search(searchRequest)
 
         return taskRequests.map {
             val taskRequestId: Long = it.id

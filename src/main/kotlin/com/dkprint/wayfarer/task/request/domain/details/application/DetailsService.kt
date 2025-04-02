@@ -3,9 +3,7 @@ package com.dkprint.wayfarer.task.request.domain.details.application
 import com.dkprint.wayfarer.task.request.domain.details.dao.DetailsRepository
 import com.dkprint.wayfarer.task.request.domain.details.domain.Details
 import com.dkprint.wayfarer.task.request.domain.details.dto.DetailsDto
-import com.dkprint.wayfarer.task.request.domain.task.request.domain.TaskRequest
 import java.time.LocalDate
-import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.springframework.stereotype.Service
 
@@ -39,38 +37,26 @@ class DetailsService(
             ?: throw IllegalArgumentException("작업 의뢰서 id: $taskRequestId 조회 오류")
     }
 
-    fun findByProductName(lastId: Long, productName: String): List<Details> {
-        return detailsRepository.findTop20ByTaskRequestIdGreaterThanAndProductNameContainingIgnoreCase(
-            lastId,
-            productName,
-        )
+    fun findByProductName(page: Int, productName: String): List<Details> {
+        return detailsRepository.findByProductNameContainingIgnoreCase(productName)
     }
 
-    fun findByProductStandard(lastId: Long, keyword: String): List<Details> {
+    fun findByProductStandard(lastId: Int, keyword: String): List<Details> {
         val standardValues: List<Int> = keyword.split("*")
             .map { it.trim().toInt() }
 
-        return detailsRepository.findTop20ByTaskRequestIdGreaterThanAndStandardWidthAndStandardLengthAndStandardHeight(
-            lastId,
+        return detailsRepository.findByStandardWidthAndStandardLengthAndStandardHeight(
             standardValues[WIDTH_INDEX],
             standardValues[LENGTH_INDEX],
             standardValues[HEIGHT_INDEX],
         )
     }
 
-    fun findByVendorId(lastId: Long, vendorId: Long): List<Details> {
-        return detailsRepository.findTop20ByTaskRequestIdGreaterThanAndVendorId(lastId, vendorId)
+    fun findByVendorId(vendorId: Long): List<Details> {
+        return detailsRepository.findByVendorId(vendorId)
     }
 
-    fun findByOrderDateBetween(
-        lastId: Long,
-        start: LocalDate,
-        end: LocalDate,
-    ): List<Details> {
-        return detailsRepository.findTop20ByTaskRequestIdGreaterThanAndOrderDateBetweenOrderByTaskRequestIdAsc(
-            lastId,
-            start,
-            end,
-        )
+    fun findByOrderDateBetween(start: LocalDate, end: LocalDate): List<Details> {
+        return detailsRepository.findByOrderDateBetween(start, end)
     }
 }
