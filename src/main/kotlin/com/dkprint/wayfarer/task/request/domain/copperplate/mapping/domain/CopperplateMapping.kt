@@ -12,7 +12,6 @@ import jakarta.persistence.Table
 class CopperplateMapping(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     val id: Long = 0L,
 
     @Column(name = "task_request_id", nullable = false)

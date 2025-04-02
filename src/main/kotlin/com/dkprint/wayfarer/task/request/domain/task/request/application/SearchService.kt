@@ -11,7 +11,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -29,122 +28,130 @@ class SearchService(
 
     fun search(searchRequest: SearchRequest): Page<TaskRequest> {
         val pageable: Pageable = PageRequest.of(searchRequest.page, PAGE_SIZE)
-        val filteredByKeyword: Page<TaskRequest> = filterByKeyword(searchRequest, pageable)
-        val filteredByDate: Page<TaskRequest> = filterByDate(searchRequest, filteredByKeyword, pageable)
+
+        val filteredByKeyword: List<Long>? =
+            filteringByKeyword(searchRequest.searchType, searchRequest.keyword)
+
+        val filteredByDate: List<Long>? =
+            filteringByDate(searchRequest.dateType, searchRequest.startDate, searchRequest.endDate)
+
         return intersect(filteredByKeyword, filteredByDate, pageable)
     }
 
-    private fun filterByKeyword(searchRequest: SearchRequest, pageable: Pageable): Page<TaskRequest> {
-        return when (searchRequest.searchType) {
-            SearchType.PRODUCT_NAME.description -> {
-                val taskRequestIds: List<Long> =
-                    detailsService.findByProductName(searchRequest.page, searchRequest.keyword!!)
-                        .map { it.taskRequestId }
-                        .toList()
+    private fun filteringByKeyword(
+        searchType: String?,
+        keyword: String?,
+    ): List<Long>? {
+        if (isKeywordNull(searchType, keyword)) {
+            return null
+        }
 
-                taskRequestService.findByIdIn(taskRequestIds, pageable)
+        return when (searchType) {
+            SearchType.PRODUCT_NAME.description -> {
+                detailsService.findByProductName(keyword!!)
+                    .map { it.taskRequestId }
             }
 
             SearchType.PRODUCT_STANDARD.description -> {
-                val taskRequestIds: List<Long> =
-                    detailsService.findByProductStandard(searchRequest.page, searchRequest.keyword!!)
-                        .map { it.taskRequestId }
-                        .toList()
-
-                taskRequestService.findByIdIn(taskRequestIds, pageable)
+                detailsService.findByProductStandard(keyword!!)
+                    .map { it.taskRequestId }
             }
 
             SearchType.PRODUCT_CODE.description -> {
-                val codeId: Long = 1L // taskRequestSdk.findIdByProductCode(keyword, pageable)
-                taskRequestService.findByCodeId(codeId, pageable)
+                val codeId: Long = 1L // TODO: taskRequestSdk.findIdByProductCode(keyword, pageable)
+                taskRequestService.findByCodeId(codeId)
+                    .map { it.id }
             }
 
             SearchType.TASK_REQUEST_NUMBER.description -> {
-                taskRequestService.findByTaskRequestNumber(searchRequest.keyword!!, pageable)
+                taskRequestService.findByTaskRequestNumber(keyword!!)
+                    .map { it.id }
             }
 
             SearchType.VENDOR.description -> {
-                val vendorId: Long = 1L // detailsSdk.findIdByVendorName(keyword, pageable)
-
-                val taskRequestIds: List<Long> = detailsService.findByVendorId(vendorId)
+                val vendorId: Long = 1L // TODO: detailsSdk.findIdByVendorName(keyword, pageable)
+                detailsService.findByVendorId(vendorId)
                     .map { it.taskRequestId }
-                    .toList()
-
-                taskRequestService.findByIdIn(taskRequestIds, pageable)
             }
 
             else -> {
-                Page.empty()
+                emptyList()
             }
         }
     }
 
-    private fun filterByDate(
-        searchRequest: SearchRequest,
-        filteredKeyword: Page<TaskRequest>,
-        pageable: Pageable,
-    ): Page<TaskRequest> {
-        if (isDateNull(searchRequest.startDate, searchRequest.endDate)) {
-            return filteredKeyword
+    private fun isKeywordNull(searchType: String?, keyword: String?): Boolean {
+        return searchType == null || keyword == null
+    }
+
+    private fun filteringByDate(
+        dateType: String?,
+        startDate: LocalDate?,
+        endDate: LocalDate?,
+    ): List<Long>? {
+        if (isDateNull(dateType, startDate, endDate)) {
+            return null
         }
 
-        val start: LocalDateTime = searchRequest.startDate!!.atStartOfDay()
-        val end: LocalDateTime = searchRequest.endDate!!.atTime(LocalTime.MAX)
+        val start: LocalDateTime = startDate!!.atStartOfDay()
+        val end: LocalDateTime = endDate!!.atTime(LocalTime.MAX)
 
-        return when (searchRequest.dateType) {
+        return when (dateType) {
             DateType.ORDER.description -> {
-                val taskRequestIds: List<Long> = detailsService.findByOrderDateBetween(
-                    searchRequest.startDate,
-                    searchRequest.endDate,
-                ).map { it.taskRequestId }
-                    .toList()
-
-                return taskRequestService.findByIdIn(taskRequestIds, pageable)
+                detailsService.findByOrderDateBetween(startDate, endDate)
+                    .map { it.taskRequestId }
             }
 
             DateType.FABRIC.description -> {
-                val fabricIds: List<Long> = listOf(1L) // fabricSdk.findIdByCreatedAtBetween(start, end, pageable)
-
-                val taskRequestIds: List<Long> = fabricMappingService.findByFabricIdIn(fabricIds)
+                val fabricIds: List<Long> = listOf(1L) // TODO: fabricSdk.findIdByCreatedAtBetween(start, end, pageable)
+                fabricMappingService.findByFabricIdIn(fabricIds)
                     .map { it.taskRequestId }
-                    .toList()
-
-                taskRequestService.findByIdIn(taskRequestIds, pageable)
             }
 
             DateType.COPPERPLATE.description -> {
                 val copperplateIds: List<Long> =
-                    listOf(1L) // copperplateSdk.findIdByCreatedAtBetween(start, end, pageable)
-
-                val taskRequestIds: List<Long> = copperplateMappingService.findByCopperplateIdIn(copperplateIds)
+                    listOf(1L) // TODO: copperplateSdk.findIdByCreatedAtBetween(start, end, pageable)
+                copperplateMappingService.findByCopperplateIdIn(copperplateIds)
                     .map { it.taskRequestId }
-                    .toList()
-
-                taskRequestService.findByIdIn(taskRequestIds, pageable)
             }
 
             else -> {
-                Page.empty()
+                emptyList()
             }
         }
     }
 
-    private fun isDateNull(startDate: LocalDate?, endDate: LocalDate?): Boolean {
-        return startDate == null && endDate == null
+    private fun isDateNull(
+        dateType: String?,
+        startDate: LocalDate?,
+        endDate: LocalDate?,
+    ): Boolean {
+        return dateType == null || startDate == null || endDate == null
     }
 
     private fun intersect(
-        filteredByKeyword: Page<TaskRequest>,
-        filteredDate: Page<TaskRequest>,
+        filteredByKeyword: List<Long>?,
+        filteredByDate: List<Long>?,
         pageable: Pageable,
     ): Page<TaskRequest> {
-        return if (filteredByKeyword.isEmpty) {
-            filteredDate
-        } else {
-            val intersection: List<TaskRequest> = filteredByKeyword.intersect(filteredDate)
-                .sortedBy { it.id }
+        return when {
+            filteredByKeyword == null && filteredByDate == null -> {
+                Page.empty()
+            }
 
-            PageImpl(intersection, pageable, pageable.pageSize.toLong())
+            filteredByKeyword != null && filteredByDate == null -> {
+                taskRequestService.findByIdIn(filteredByKeyword, pageable)
+            }
+
+            filteredByKeyword == null && filteredByDate != null -> {
+                taskRequestService.findByIdIn(filteredByDate, pageable)
+            }
+
+            else -> {
+                val intersection: List<Long> = filteredByKeyword!!.intersect(filteredByDate!!.toSet())
+                    .toList()
+                taskRequestService.findByIdIn(intersection, pageable)
+            }
         }
     }
 }

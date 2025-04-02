@@ -3,6 +3,8 @@ package com.dkprint.wayfarer.task.request.domain.fabric.mapping.application
 import com.dkprint.wayfarer.task.request.domain.fabric.mapping.dao.FabricMappingRepository
 import com.dkprint.wayfarer.task.request.domain.fabric.mapping.domain.FabricMapping
 import com.dkprint.wayfarer.task.request.domain.fabric.mapping.dto.FabricDto
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service

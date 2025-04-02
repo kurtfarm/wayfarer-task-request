@@ -62,11 +62,11 @@ class TaskRequestService(
         return taskRequestRepository.findByIdIn(taskRequestIds, pageable)
     }
 
-    fun findByCodeId(codeId: Long, pageable: Pageable): Page<TaskRequest> {
-        return taskRequestRepository.findByCodeId(codeId, pageable)
+    fun findByCodeId(codeId: Long): List<TaskRequest> {
+        return taskRequestRepository.findByCodeId(codeId)
     }
 
-    fun findByTaskRequestNumber(keyword: String, pageable: Pageable): Page<TaskRequest> {
-        return taskRequestRepository.findAllByTaskRequestNumber(keyword, pageable)
+    fun findByTaskRequestNumber(keyword: String): List<TaskRequest> {
+        return listOf(taskRequestRepository.findByTaskRequestNumber(keyword)!!)
     }
 }
