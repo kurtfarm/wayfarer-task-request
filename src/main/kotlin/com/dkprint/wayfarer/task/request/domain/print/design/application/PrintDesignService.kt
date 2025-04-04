@@ -2,7 +2,7 @@ package com.dkprint.wayfarer.task.request.domain.print.design.application
 
 import com.dkprint.wayfarer.task.request.domain.print.design.dao.PrintDesignRepository
 import com.dkprint.wayfarer.task.request.domain.print.design.domain.PrintDesign
-import com.dkprint.wayfarer.task.request.global.infrastructure.S3Service
+import com.dkprint.wayfarer.task.request.common.infrastructure.S3Service
 import java.util.concurrent.CompletableFuture
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile

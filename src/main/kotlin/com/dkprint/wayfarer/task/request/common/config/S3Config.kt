@@ -1,4 +1,4 @@
-package com.dkprint.wayfarer.task.request.global.config
+package com.dkprint.wayfarer.task.request.common.config
 
 import java.net.URI
 import org.springframework.beans.factory.annotation.Value

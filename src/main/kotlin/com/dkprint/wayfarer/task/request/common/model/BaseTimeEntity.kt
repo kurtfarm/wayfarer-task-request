@@ -1,4 +1,4 @@
-package com.dkprint.wayfarer.task.request.global.model
+package com.dkprint.wayfarer.task.request.common.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass

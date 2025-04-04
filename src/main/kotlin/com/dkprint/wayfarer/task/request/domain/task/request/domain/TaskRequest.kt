@@ -1,7 +1,7 @@
 package com.dkprint.wayfarer.task.request.domain.task.request.domain
 
 import com.dkprint.wayfarer.task.request.domain.task.request.api.dto.request.SaveRequest
-import com.dkprint.wayfarer.task.request.global.model.BaseTimeEntity
+import com.dkprint.wayfarer.task.request.common.model.BaseTimeEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue

@@ -1,7 +1,7 @@
-package com.dkprint.wayfarer.task.request.global.infrastructure
+package com.dkprint.wayfarer.task.request.common.infrastructure
 
-import com.dkprint.wayfarer.task.request.global.exception.S3ClientException
-import com.dkprint.wayfarer.task.request.global.exception.S3ServerException
+import com.dkprint.wayfarer.task.request.common.exception.S3ClientException
+import com.dkprint.wayfarer.task.request.common.exception.S3ServerException
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import org.springframework.beans.factory.annotation.Value
