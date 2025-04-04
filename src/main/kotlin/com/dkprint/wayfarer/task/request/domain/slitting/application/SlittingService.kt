@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service
 @Service
 class SlittingService(
     private val slittingRepository: SlittingRepository,
-    // private val vendorSdk: VendorSdk,
+    // TODO: private val vendorSdk: VendorSdk,
 ) {
     fun create(taskRequestId: Long, slittingDto: SlittingDto) {
-        val vendorId: Long = 1L // vendorSdk.findIdByVendorName(slittingDto.vendorName)
+        val vendorId: Long = 1L // TODO: vendorSdk.findIdByVendorName(slittingDto.vendorName)
         val slitting: Slitting = Slitting.of(taskRequestId, vendorId, slittingDto)
         slittingRepository.save(slitting)
     }

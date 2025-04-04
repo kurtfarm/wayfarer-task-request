@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service
 @Service
 class ProcessingService(
     private val processingRepository: ProcessingRepository,
-    // private val vendorSdk: VendorSdk,
+    // TODO: private val vendorSdk: VendorSdk,
 ) {
     fun create(taskRequestId: Long, processingDto: ProcessingDto) {
-        val vendorId: Long = 1L // vendorRepository.findIdByVendorName(processingDto.vendorName)
+        val vendorId: Long = 1L // TODO: vendorRepository.findIdByVendorName(processingDto.vendorName)
         val processing: Processing = Processing.of(taskRequestId, vendorId, processingDto)
         processingRepository.save(processing)
     }

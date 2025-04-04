@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service
 @Service
 class EtcService(
     private val etcRepository: EtcRepository,
-    // private val vendorSdk: VendorSdk,
+    // TODO: private val vendorSdk: VendorSdk,
 ) {
     fun create(taskRequestId: Long, etcDto: EtcDto) {
-        val vendorId: Long = 1L // vendorRepository.findIdByVendorName(etcDto.vendorName)
+        val vendorId: Long = 1L // TODO: vendorRepository.findIdByVendorName(etcDto.vendorName)
         val etc: Etc = Etc.of(taskRequestId, vendorId, etcDto)
         etcRepository.save(etc)
     }

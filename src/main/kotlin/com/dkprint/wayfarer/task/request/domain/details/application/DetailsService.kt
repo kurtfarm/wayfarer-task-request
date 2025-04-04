@@ -5,14 +5,12 @@ import com.dkprint.wayfarer.task.request.domain.details.domain.Details
 import com.dkprint.wayfarer.task.request.domain.details.dto.DetailsDto
 import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
 class DetailsService(
     private val detailsRepository: DetailsRepository,
-    // private val vendorSdk: VendorSdk,
+    // TODO: private val vendorSdk: VendorSdk,
 ) {
     companion object {
         private const val WIDTH_INDEX: Int = 0
@@ -21,7 +19,7 @@ class DetailsService(
     }
 
     fun create(taskRequestId: Long, detailsDto: DetailsDto) {
-        val vendorId: Long = 1L // vendorSdk.findIdByName(detailsDto.vendorName)
+        val vendorId: Long = 1L // TODO: vendorSdk.findIdByName(detailsDto.vendorName)
         val details: Details = Details.of(
             taskRequestId,
             vendorId,

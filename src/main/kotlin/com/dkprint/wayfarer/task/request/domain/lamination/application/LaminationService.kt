@@ -10,7 +10,7 @@ class LaminationService(
     private val laminationRepository: LaminationRepository,
 ) {
     fun create(taskRequestId: Long, laminationDto: LaminationDto) {
-        val vendorId: Long = 1L // vendorSdk.findIdByVendorName(laminationDto.taskVendorName)
+        val vendorId: Long = 1L // TODO: vendorSdk.findIdByVendorName(laminationDto.taskVendorName)
         val lamination: Lamination = Lamination.of(taskRequestId, laminationDto, vendorId)
         laminationRepository.save(lamination)
     }

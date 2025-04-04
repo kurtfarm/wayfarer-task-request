@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service
 @Service
 class TaskRequestService(
     private val taskRequestRepository: TaskRequestRepository,
-    // private val searchService: SearchService,
-    // private val codeSdk: CodeSdk,
+    // TODO: private val codeSdk: CodeSdk,
 ) {
     companion object {
         private const val PAGE_SIZE = 20
@@ -23,7 +22,7 @@ class TaskRequestService(
 
     fun create(saveRequest: SaveRequest): TaskRequest {
         val taskRequest: TaskRequest = TaskRequest.from(saveRequest)
-        taskRequest.codeId = 1L // codeSdk.generate()
+        taskRequest.codeId = 1L // TODO: codeSdk.generate()
         val savedTaskRequest: TaskRequest = taskRequestRepository.save(taskRequest)
         val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         val order: String = String.format("%02d", savedTaskRequest.id)

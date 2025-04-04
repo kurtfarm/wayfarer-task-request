@@ -45,10 +45,10 @@ class TaskRequestFacade(
     private val etcService: EtcService,
     private val processingService: ProcessingService,
     private val printDesignService: PrintDesignService,
-    // private val codeSdk: CodeSdk,
-    // private val fabricSdk: FabricSdk,
-    // private val copperplateSdk: CopperplateSdk,
-    // private val vendorSdk: VendorSdk,
+    // TODO: private val codeSdk: CodeSdk,
+    // TODO: private val fabricSdk: FabricSdk,
+    // TODO: private val copperplateSdk: CopperplateSdk,
+    // TODO: private val vendorSdk: VendorSdk,
 ) {
     @Transactional
     fun create(saveRequest: SaveRequest): SaveResponse {
@@ -89,7 +89,7 @@ class TaskRequestFacade(
                 vendorName = "두성",
                 expectedArrivalDate = LocalDate.of(2025, 5, 30),
             )
-        ) // fabricMappings.map { fabricSdk.findById(it.fabricId) }
+        ) // TODO: fabricMappings.map { fabricSdk.findById(it.fabricId) }
         val printing: Printing = printingService.find(taskRequestId)
         val laminations: List<Lamination> = laminationService.find(taskRequestId)
         val etc1: Etc = etcService.findEtc1(taskRequestId)
@@ -97,11 +97,11 @@ class TaskRequestFacade(
         val processing: Processing = processingService.find(taskRequestId)
         val printDesigns: List<String> = printDesignService.find(taskRequestId)
 
-        val detailsVendorName: String = "대경" // vendorSdk.findByVendorId(details.vendorId)
-        val copperplateName: String = "동판" //
-        val etc1VendorName: String = "대경" // vendorSdk.findByVendorId(etc1.vendorId)
-        val etc2VendorName: String = "대경" // vendorSdk.findByVendorId(etc2.vendorId)
-        val processingVendorName: String = "대경" // vendorSdk.findByVendorId(processing.vendorId)
+        val detailsVendorName: String = "대경" // TODO: vendorSdk.findByVendorId(details.vendorId)
+        val copperplateName: String = "동판" // TODO: copperplateSdk.findBy
+        val etc1VendorName: String = "대경" // TODO: vendorSdk.findByVendorId(etc1.vendorId)
+        val etc2VendorName: String = "대경" // TODO: vendorSdk.findByVendorId(etc2.vendorId)
+        val processingVendorName: String = "대경" // TODO: vendorSdk.findByVendorId(processing.vendorId)
 
         return ReadResponse(
             detailsDto = DetailsDto.of(details, detailsVendorName),
@@ -129,10 +129,11 @@ class TaskRequestFacade(
                 "${details.standardLength} * ${details.standardWidth} * ${details.standardHeight}"
             val laminations: List<Lamination> = laminationService.find(taskRequestId)
             val processing: Processing = processingService.find(taskRequestId)
-            val code: String = "ABCDEF" // codeSdk.findById(it.codeId)
-            val fabricExpectedArrivalDate: LocalDate = LocalDate.now() // fabricSdk.findArrivalDateById(it.id)
-            val copperplateExpectedArrivalDate: LocalDate = LocalDate.now() // copperplateSdk.findArrivalDateById(it.id)
-            val productVendorName: String = "대경" // vendorSdk.findVendorNameById(details.vendorId)
+            val code: String = "ABCDEF" // TODO: codeSdk.findById(it.codeId)
+            val fabricExpectedArrivalDate: LocalDate = LocalDate.now() // TODO: fabricSdk.findArrivalDateById(it.id)
+            val copperplateExpectedArrivalDate: LocalDate =
+                LocalDate.now() // TODO: copperplateSdk.findArrivalDateById(it.id)
+            val productVendorName: String = "대경" // TODO: vendorSdk.findVendorNameById(details.vendorId)
             val laminationVendorNames: List<String> = listOf(
                 "1차 거래처",
                 "2차 거래처",
@@ -185,17 +186,18 @@ class TaskRequestFacade(
                 "${details.standardLength} * ${details.standardWidth} * ${details.standardHeight}"
             val laminations: List<Lamination> = laminationService.find(taskRequestId)
             val processing: Processing = processingService.find(taskRequestId)
-            val code: String = "ABCDEF" // codeSdk.findById(it.codeId)
-            val fabricExpectedArrivalDate: LocalDate = LocalDate.now() // fabricSdk.findArrivalDateById(it.id)
-            val copperplateExpectedArrivalDate: LocalDate = LocalDate.now() // copperplateSdk.findArrivalDateById(it.id)
-            val productVendorName: String = "대경" // vendorSdk.findVendorNameById(details.vendorId)
+            val code: String = "ABCDEF" // TODO: codeSdk.findById(it.codeId)
+            val fabricExpectedArrivalDate: LocalDate = LocalDate.now() // TODO: fabricSdk.findArrivalDateById(it.id)
+            val copperplateExpectedArrivalDate: LocalDate =
+                LocalDate.now() // TODO: copperplateSdk.findArrivalDateById(it.id)
+            val productVendorName: String = "대경" // TODO: vendorSdk.findVendorNameById(details.vendorId)
             val laminationVendorNames: List<String> = listOf(
                 "1차 거래처",
                 "2차 거래처",
                 "1차 거래처",
                 "2차 거래처",
-            ).distinct() // laminations.map { lamination ->vendorSdk.findVendorNameById(lamination.vendorId) }
-            val processingVendorName: String = "대경" // vendorSdk.findVendorNameById(processing.vendorId)
+            ).distinct() // TODO: laminations.map { lamination ->vendorSdk.findVendorNameById(lamination.vendorId) }
+            val processingVendorName: String = "대경" // TODO: vendorSdk.findVendorNameById(processing.vendorId)
 
             SearchResponse(
                 taskRequestId = taskRequestId,

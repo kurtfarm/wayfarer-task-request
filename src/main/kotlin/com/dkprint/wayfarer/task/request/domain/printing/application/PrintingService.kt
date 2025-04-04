@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service
 class PrintingService(
     private val printingRepository: PrintingRepository,
     private val copperplateMappingService: CopperplateMappingService,
-    // private val copperplateSdk: CopperplateSdk,
+    // TODO: private val copperplateSdk: CopperplateSdk,
 ) {
     fun create(taskRequestId: Long, printingDto: PrintingDto) {
-        val copperplateId: Long = 1L // copperplateSdk.findIdByCopperplateName(printingDto.copperplateName)
+        val copperplateId: Long = 1L // TODO: copperplateSdk.findIdByCopperplateName(printingDto.copperplateName)
         val printing: Printing = Printing.of(taskRequestId, copperplateId, printingDto)
         val copperplateMapping: CopperplateMapping = CopperplateMapping.of(taskRequestId, copperplateId)
         printingRepository.save(printing)
