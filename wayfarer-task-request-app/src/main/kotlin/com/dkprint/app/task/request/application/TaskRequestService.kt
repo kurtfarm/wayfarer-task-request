@@ -36,7 +36,7 @@ class TaskRequestService(
 
     fun readAll(request: ReadAllRequest): Page<TaskRequest> {
         val pageable: Pageable = PageRequest.of(request.page, PAGE_SIZE)
-        return taskRequestRepository.findByIsDeletedIsFalseOrderByIdAsc(pageable)
+        return taskRequestRepository.findByIsDeletedIsFalseOrderByCreatedAtDesc(pageable)
     }
 
     fun update(taskRequestNumber: String, request: UpsertRequest): TaskRequest {
@@ -54,7 +54,7 @@ class TaskRequestService(
     }
 
     fun findByIdIn(taskRequestIds: List<Long>, pageable: Pageable): Page<TaskRequest> {
-        return taskRequestRepository.findByIdIn(taskRequestIds, pageable)
+        return taskRequestRepository.findByIdInOrderByCreatedAtDesc(taskRequestIds, pageable)
     }
 
     fun findByCodeId(codeId: Long): List<TaskRequest> {
