@@ -6,6 +6,7 @@ import com.dkprint.app.task.request.dao.TaskRequestRepository
 import com.dkprint.app.task.request.domain.TaskRequest
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -47,6 +48,7 @@ class TaskRequestService(
         return existing.update(updated)
     }
 
+    @CacheEvict(value = ["taskRequestRead"], key = "#taskRequestNumber")
     @Transactional
     fun delete(taskRequestNumber: String): Long {
         val taskRequest: TaskRequest = taskRequestRepository.findByTaskRequestNumber(taskRequestNumber)

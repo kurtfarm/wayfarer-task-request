@@ -1,8 +1,10 @@
 package com.dkprint.app.etc.dto
 
+import com.dkprint.app.core.annotation.NoArg
 import com.dkprint.app.etc.domain.Etc
 import java.time.LocalDate
 
+@NoArg
 data class EtcDto(
     val taskName: String,
     val taskType: String,

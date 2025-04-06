@@ -1,8 +1,10 @@
 package com.dkprint.app.lamination.dto
 
+import com.dkprint.app.core.annotation.NoArg
 import com.dkprint.app.lamination.domain.Lamination
 import java.time.LocalDate
 
+@NoArg
 data class LaminationDto(
     val sequence: Int,
     val taskVendorName: String,
