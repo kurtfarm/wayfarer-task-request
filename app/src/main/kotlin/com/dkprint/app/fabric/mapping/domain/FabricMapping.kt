@@ -1,4 +1,4 @@
-package com.dkprint.app.copperplate.mapping.domain
+package com.dkprint.app.fabric.mapping.domain
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

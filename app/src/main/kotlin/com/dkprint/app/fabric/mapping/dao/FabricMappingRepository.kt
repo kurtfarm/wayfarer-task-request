@@ -1,6 +1,6 @@
-package com.dkprint.app.copperplate.mapping.dao
+package com.dkprint.app.fabric.mapping.dao
 
-import com.dkprint.app.copperplate.mapping.domain.FabricMapping
+import com.dkprint.app.fabric.mapping.domain.FabricMapping
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
