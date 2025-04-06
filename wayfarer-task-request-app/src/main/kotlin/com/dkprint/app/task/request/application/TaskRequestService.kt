@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class TaskRequestService(
@@ -46,6 +47,7 @@ class TaskRequestService(
         return existing.update(updated)
     }
 
+    @Transactional
     fun delete(taskRequestNumber: String): Long {
         val taskRequest: TaskRequest = taskRequestRepository.findByTaskRequestNumber(taskRequestNumber)
             ?: throw IllegalArgumentException("작업 의뢰서 번호: $taskRequestNumber 조회 오류")

@@ -142,22 +142,6 @@ class TaskRequestFacade(
     }
 
     @Transactional
-    fun delete(taskRequestNumber: String) {
-        taskRequestService.delete(taskRequestNumber) // soft delete
-        /* hard delete
-        val taskRequestId: Long = taskRequestService.delete(taskRequestNumber)
-        detailsService.delete(taskRequestId)
-        fabricMappingService.delete(taskRequestId)
-        printingService.delete(taskRequestId)
-        laminationService.delete(taskRequestId)
-        slittingService.delete(taskRequestId)
-        etcService.delete(taskRequestId)
-        processingService.delete(taskRequestId)
-        printDesignService.delete(taskRequestId)
-        */
-    }
-
-    @Transactional
     fun search(request: SearchRequest): Paging<SearchResponse> {
         val taskRequests: Page<TaskRequest> = searchFacade.search(request)
         val response: Page<SearchResponse> = toResponse(taskRequests)
