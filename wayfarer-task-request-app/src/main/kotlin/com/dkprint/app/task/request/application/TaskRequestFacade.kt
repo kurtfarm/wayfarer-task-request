@@ -31,6 +31,8 @@ import com.dkprint.app.slitting.application.SlittingService
 
 import com.dkprint.app.task.request.domain.TaskRequest
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -53,6 +55,10 @@ class TaskRequestFacade(
     // TODO: private val copperplateSdk: CopperplateSdk,
     // TODO: private val vendorSdk: VendorSdk,
 ) {
+    companion object {
+        private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd (E)", Locale.KOREAN)
+    }
+
     @Transactional
     fun create(request: UpsertRequest, printDesigns: List<MultipartFile>?): UpsertResponse {
         val taskRequest: TaskRequest = taskRequestService.create(request)
@@ -123,21 +129,29 @@ class TaskRequestFacade(
         val pages: Page<ReadAllResponse> = taskRequests.map { taskRequest ->
             val taskRequestId: Long = taskRequest.id
             val details: Details = detailsService.findByTaskRequestId(taskRequestId)
+            val orderDate: String = details.orderDate
+                .format(formatter)
+
             val productStandard: String =
                 "${details.standardLength} * ${details.standardWidth} * ${details.standardHeight}"
             val laminations: List<Lamination> = laminationService.find(taskRequestId)
             val processing: Processing = processingService.find(taskRequestId)
             val code: String = "ABCDEF" // TODO: codeSdk.findById(it.codeId)
-            val fabricExpectedArrivalDate: LocalDate = listOf(
+
+            val fabricExpectedArrivalDates: LocalDate = listOf(
                 LocalDate.now(),
                 LocalDate.now().plusDays(1),
                 LocalDate.now().plusDays(2),
-            ).last()  // TODO: fabricSdk.findArrivalDateById(it.id)
-            val copperplateExpectedArrivalDate: LocalDate = listOf(
+            ).last() // TODO: fabricSdk.findArrivalDateById(it.id)
+            val fabricExpectedArrivalDate: String = fabricExpectedArrivalDates.format(formatter)
+
+            val copperplateExpectedArrivalDates: LocalDate = listOf(
                 LocalDate.now(),
                 LocalDate.now().plusDays(1),
                 LocalDate.now().plusDays(2),
             ).last() // TODO: copperplateSdk.findArrivalDateById(it.id)
+            val copperplateExpectedArrivalDate: String = copperplateExpectedArrivalDates.format(formatter)
+
             val productVendorName: String = "대경" // TODO: vendorSdk.findVendorNameById(details.vendorId)
             val laminationVendorNames: List<String> = listOf("1차 거래처", "2차 거래처", "1차 거래처", "2차 거래처")
                 .distinct() // TODO: laminations.map { lamination ->vendorSdk.findVendorNameById(lamination.vendorId) }
@@ -145,7 +159,7 @@ class TaskRequestFacade(
 
             ReadAllResponse(
                 taskRequestId = taskRequestId,
-                orderDate = details.orderDate,
+                orderDate = orderDate,
                 taskRequestNumber = taskRequest.taskRequestNumber,
                 productCode = code,
                 productName = details.productName,
@@ -193,21 +207,29 @@ class TaskRequestFacade(
         val pages: Page<SearchResponse> = taskRequests.map { taskRequest ->
             val taskRequestId: Long = taskRequest.id
             val details: Details = detailsService.findByTaskRequestId(taskRequestId)
+            val orderDate: String = details.orderDate
+                .format(formatter)
+
             val productStandard: String =
                 "${details.standardLength} * ${details.standardWidth} * ${details.standardHeight}"
             val laminations: List<Lamination> = laminationService.find(taskRequestId)
             val processing: Processing = processingService.find(taskRequestId)
             val code: String = "ABCDEF" // TODO: codeSdk.findById(it.codeId)
-            val fabricExpectedArrivalDate: LocalDate = listOf(
+
+            val fabricExpectedArrivalDates: LocalDate = listOf(
                 LocalDate.now(),
                 LocalDate.now().plusDays(1),
                 LocalDate.now().plusDays(2),
             ).last()  // TODO: fabricSdk.findArrivalDateById(it.id)
-            val copperplateExpectedArrivalDate: LocalDate = listOf(
+            val fabricExpectedArrivalDate: String = fabricExpectedArrivalDates.format(formatter)
+
+            val copperplateExpectedArrivalDates: LocalDate = listOf(
                 LocalDate.now(),
                 LocalDate.now().plusDays(1),
                 LocalDate.now().plusDays(2),
             ).last() // TODO: copperplateSdk.findArrivalDateById(it.id)
+            val copperplateExpectedArrivalDate: String = copperplateExpectedArrivalDates.format(formatter)
+
             val productVendorName: String = "대경" // TODO: vendorSdk.findVendorNameById(details.vendorId)
             val laminationVendorNames: List<String> = listOf("1차 거래처", "2차 거래처", "1차 거래처", "2차 거래처")
                 .distinct() // TODO: laminations.map { lamination ->vendorSdk.findVendorNameById(lamination.vendorId) }
@@ -215,7 +237,7 @@ class TaskRequestFacade(
 
             SearchResponse(
                 taskRequestId = taskRequestId,
-                orderDate = details.orderDate,
+                orderDate = orderDate,
                 taskRequestNumber = taskRequest.taskRequestNumber,
                 productCode = code,
                 productName = details.productName,
