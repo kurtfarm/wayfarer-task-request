@@ -62,7 +62,7 @@ class TaskRequestFacade(
     @Transactional
     fun create(request: UpsertRequest, printDesigns: List<MultipartFile>?): UpsertResponse {
         val taskRequest: TaskRequest = taskRequestService.create(request)
-        createCascade(taskRequest.id, taskRequest.taskRequestNumber, request, printDesigns)
+        cascade(taskRequest.id, taskRequest.taskRequestNumber, request, printDesigns, false)
         return UpsertResponse(taskRequest.id, taskRequest.taskRequestNumber)
     }
 
@@ -181,7 +181,7 @@ class TaskRequestFacade(
         printDesigns: List<MultipartFile>?,
     ): UpsertResponse {
         val taskRequest: TaskRequest = taskRequestService.update(taskRequestNumber, request)
-        updateCascade(taskRequest.id, taskRequestNumber, request, printDesigns)
+        cascade(taskRequest.id, taskRequestNumber, request, printDesigns, true)
         return UpsertResponse(taskRequest.id, taskRequest.taskRequestNumber)
     }
 
@@ -252,75 +252,32 @@ class TaskRequestFacade(
         return Paging.from(pages)
     }
 
-    private fun createCascade(
+    private fun cascade(
         taskRequestId: Long,
         taskRequestNumber: String,
         request: UpsertRequest,
-        printDesigns: List<MultipartFile>?
+        printDesigns: List<MultipartFile>?,
+        isUpdate: Boolean,
     ) {
         val productName: String = request.detailsDto.productName
 
-        detailsService.create(taskRequestId, request.detailsDto)
-        request.fabricDtos
-            .forEach { fabricDto ->
-                fabricMappingService.create(taskRequestId, fabricDto)
-            }
+        if (isUpdate) {
+            fabricMappingService.delete(taskRequestId)
+            laminationService.delete(taskRequestId)
+            etcService.delete(taskRequestId)
+            printDesignService.delete(taskRequestId, taskRequestNumber)
+        }
 
         with(request) {
+            detailsDto.let { detailsService.create(taskRequestId, it) }
+            fabricDtos.forEach { fabricMappingService.create(taskRequestId, it) }
             printingDto?.let { printingService.create(taskRequestId, it) }
-            laminationDtos?.let {
-                it.forEach { laminationDto ->
-                    laminationService.create(taskRequestId, laminationDto)
-                }
-            }
+            laminationDtos?.forEach { laminationService.create(taskRequestId, it) }
             slittingDto?.let { slittingService.create(taskRequestId, it) }
             listOfNotNull(etc1Dto, etc2Dto).forEach { etcService.create(taskRequestId, it) }
             processingDto?.let { processingService.create(taskRequestId, it) }
         }
 
-        printDesigns?.let {
-            it.forEach { printDesign ->
-                printDesignService.create(taskRequestId, taskRequestNumber, productName, printDesign)
-            }
-        }
-    }
-
-    private fun updateCascade(
-        taskRequestId: Long,
-        taskRequestNumber: String,
-        request: UpsertRequest,
-        printDesigns: List<MultipartFile>?
-    ) {
-        val productName: String = request.detailsDto.productName
-
-        detailsService.create(taskRequestId, request.detailsDto)
-        fabricMappingService.delete(taskRequestId)
-        request.fabricDtos
-            .forEach { fabricDto ->
-                fabricMappingService.create(taskRequestId, fabricDto)
-            }
-
-        with(request) {
-            printingDto?.let { printingService.create(taskRequestId, it) }
-            laminationDtos?.let {
-                laminationService.delete(taskRequestId)
-                it.forEach { laminationDto ->
-                    laminationService.create(taskRequestId, laminationDto)
-                }
-            }
-            slittingDto?.let { slittingService.create(taskRequestId, it) }
-            etcService.delete(taskRequestId)
-            listOfNotNull(etc1Dto, etc2Dto).forEach {
-                etcService.create(taskRequestId, it)
-            }
-            processingDto?.let { processingService.create(taskRequestId, it) }
-            printDesignService.delete(taskRequestId, taskRequestNumber)
-        }
-
-        printDesigns?.let {
-            it.forEach { printDesign ->
-                printDesignService.create(taskRequestId, taskRequestNumber, productName, printDesign)
-            }
-        }
+        printDesigns?.forEach { printDesignService.create(taskRequestId, taskRequestNumber, productName, it) }
     }
 }
