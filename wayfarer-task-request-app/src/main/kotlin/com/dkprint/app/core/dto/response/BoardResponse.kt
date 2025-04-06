@@ -1,6 +1,6 @@
 package com.dkprint.app.core.dto.response
 
-data class SearchResponse(
+data class BoardResponse(
     val taskRequestId: Long,
     val orderDate: String,
     val taskRequestNumber: String,

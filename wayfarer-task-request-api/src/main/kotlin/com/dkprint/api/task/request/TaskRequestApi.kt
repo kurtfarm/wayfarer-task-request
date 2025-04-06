@@ -4,9 +4,8 @@ import com.dkprint.app.core.dto.Paging
 import com.dkprint.app.core.dto.request.ReadAllRequest
 import com.dkprint.app.core.dto.request.SearchRequest
 import com.dkprint.app.core.dto.request.UpsertRequest
-import com.dkprint.app.core.dto.response.ReadAllResponse
+import com.dkprint.app.core.dto.response.BoardResponse
 import com.dkprint.app.core.dto.response.ReadResponse
-import com.dkprint.app.core.dto.response.SearchResponse
 import com.dkprint.app.core.dto.response.UpsertResponse
 import com.dkprint.app.core.path.ApiPath
 import com.dkprint.app.task.request.application.TaskRequestFacade
@@ -56,8 +55,8 @@ class TaskRequestApi(
     @GetMapping(ApiPath.TaskRequest.READ_ALL)
     fun readAll(
         @ModelAttribute request: ReadAllRequest,
-    ): ResponseEntity<Paging<ReadAllResponse>> {
-        val response: Paging<ReadAllResponse> = taskRequestFacade.readAll(request)
+    ): ResponseEntity<Paging<BoardResponse>> {
+        val response: Paging<BoardResponse> = taskRequestFacade.readAll(request)
         return ResponseEntity.ok(response)
     }
 
@@ -82,8 +81,8 @@ class TaskRequestApi(
     @GetMapping(ApiPath.TaskRequest.SEARCH)
     fun search(
         @ModelAttribute request: SearchRequest,
-    ): ResponseEntity<Paging<SearchResponse>> {
-        val response: Paging<SearchResponse> = taskRequestFacade.search(request)
+    ): ResponseEntity<Paging<BoardResponse>> {
+        val response: Paging<BoardResponse> = taskRequestFacade.search(request)
         return ResponseEntity.ok(response)
     }
 }
