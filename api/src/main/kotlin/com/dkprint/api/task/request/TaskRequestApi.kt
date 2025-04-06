@@ -10,6 +10,7 @@ import com.dkprint.app.core.dto.response.SearchResponse
 import com.dkprint.app.core.dto.response.UpsertResponse
 import com.dkprint.app.core.path.ApiPath
 import com.dkprint.app.task.request.application.TaskRequestFacade
+import com.dkprint.app.task.request.application.TaskRequestService
 import jakarta.validation.constraints.Size
 import java.net.URI
 import org.springframework.http.MediaType
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 class TaskRequestApi(
     private val taskRequestFacade: TaskRequestFacade,
+    private val taskRequestService: TaskRequestService,
 ) {
     companion object {
         private const val IMAGE_SIZE: Int = 5
@@ -73,7 +75,7 @@ class TaskRequestApi(
     fun delete(
         @PathVariable taskRequestNumber: String,
     ): ResponseEntity<Void> {
-        taskRequestFacade.delete(taskRequestNumber)
+        taskRequestService.delete(taskRequestNumber)
         return ResponseEntity.noContent().build()
     }
 
