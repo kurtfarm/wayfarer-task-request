@@ -1,7 +1,9 @@
 package com.dkprint.app.fabric.mapping.dto
 
+import com.dkprint.app.core.annotation.NoArg
 import java.time.LocalDate
 
+@NoArg
 data class FabricDto(
     val fabricClass: Int,
     val fabricType: String,

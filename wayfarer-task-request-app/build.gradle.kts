@@ -5,6 +5,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-data-jpa")
     api("org.springframework.boot:spring-boot-starter-validation")
     api("software.amazon.awssdk:s3")
+    api("org.springframework.boot:spring-boot-starter-data-redis")
 
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 }
@@ -15,4 +16,8 @@ tasks.bootJar {
 
 tasks.jar {
     enabled = true
+}
+
+noArg {
+    annotation("com.dkprint.app.core.annotation.NoArg")
 }

@@ -1,9 +1,12 @@
 package com.dkprint.app.printing.dto
 
+import com.dkprint.app.core.annotation.NoArg
 import com.dkprint.app.printing.domain.Printing
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+@NoArg
 data class PrintingDto(
     val numberOfInks: String,
     val copperplateWidth: Int,
@@ -13,7 +16,7 @@ data class PrintingDto(
     val supervisionDatetime: LocalDateTime,
     val printingDirection: Int,
     val copperplateName: String,
-    val isMatte: Boolean,
+    @JsonProperty("isMatte") val isMatte: Boolean,
 ) {
     companion object {
         fun of(printing: Printing, copperplateName: String): PrintingDto {

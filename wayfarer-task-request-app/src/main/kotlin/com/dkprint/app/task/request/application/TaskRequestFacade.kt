@@ -32,6 +32,8 @@ import com.dkprint.app.task.request.domain.TaskRequest
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -65,6 +67,7 @@ class TaskRequestFacade(
         return UpsertResponse(taskRequest.id, taskRequest.taskRequestNumber)
     }
 
+    @Cacheable(value = ["taskRequestRead"], key = "#taskRequestNumber")
     @Transactional
     fun read(taskRequestNumber: String): ReadResponse {
         val taskRequest: TaskRequest = taskRequestService.read(taskRequestNumber)
@@ -129,6 +132,7 @@ class TaskRequestFacade(
         return Paging.from(response)
     }
 
+    @CacheEvict(value = ["taskRequestRead"], key = "#taskRequestNumber")
     @Transactional
     fun update(
         taskRequestNumber: String,
