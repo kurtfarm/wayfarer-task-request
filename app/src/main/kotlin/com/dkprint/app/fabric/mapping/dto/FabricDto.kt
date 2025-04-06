@@ -1,4 +1,4 @@
-package com.dkprint.app.copperplate.mapping.dto
+package com.dkprint.app.fabric.mapping.dto
 
 import java.time.LocalDate
 
