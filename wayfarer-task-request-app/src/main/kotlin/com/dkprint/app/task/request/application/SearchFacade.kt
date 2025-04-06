@@ -1,9 +1,9 @@
 package com.dkprint.app.task.request.application
 
 import com.dkprint.app.copperplate.mapping.application.CopperplateMappingService
-import com.dkprint.app.copperplate.mapping.application.FabricMappingService
 import com.dkprint.app.core.dto.request.SearchRequest
 import com.dkprint.app.details.application.DetailsService
+import com.dkprint.app.fabric.mapping.application.FabricMappingService
 import com.dkprint.app.task.request.domain.DateType
 import com.dkprint.app.task.request.domain.SearchType
 import com.dkprint.app.task.request.domain.TaskRequest

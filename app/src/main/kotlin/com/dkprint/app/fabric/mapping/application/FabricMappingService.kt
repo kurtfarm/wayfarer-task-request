@@ -1,8 +1,8 @@
-package com.dkprint.app.copperplate.mapping.application
+package com.dkprint.app.fabric.mapping.application
 
-import com.dkprint.app.copperplate.mapping.dao.FabricMappingRepository
-import com.dkprint.app.copperplate.mapping.domain.FabricMapping
-import com.dkprint.app.copperplate.mapping.dto.FabricDto
+import com.dkprint.app.fabric.mapping.dao.FabricMappingRepository
+import com.dkprint.app.fabric.mapping.domain.FabricMapping
+import com.dkprint.app.fabric.mapping.dto.FabricDto
 import org.springframework.stereotype.Service
 
 @Service

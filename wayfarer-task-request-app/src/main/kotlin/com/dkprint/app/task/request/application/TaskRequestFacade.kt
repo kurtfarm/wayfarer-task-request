@@ -1,8 +1,5 @@
 package com.dkprint.app.task.request.application
 
-import com.dkprint.app.copperplate.mapping.application.FabricMappingService
-import com.dkprint.app.copperplate.mapping.domain.FabricMapping
-import com.dkprint.app.copperplate.mapping.dto.FabricDto
 import com.dkprint.app.core.dto.Paging
 import com.dkprint.app.core.dto.request.ReadAllRequest
 import com.dkprint.app.core.dto.request.SearchRequest
@@ -17,6 +14,9 @@ import com.dkprint.app.details.dto.DetailsDto
 import com.dkprint.app.etc.application.EtcService
 import com.dkprint.app.etc.domain.Etc
 import com.dkprint.app.etc.dto.EtcDto
+import com.dkprint.app.fabric.mapping.application.FabricMappingService
+import com.dkprint.app.fabric.mapping.domain.FabricMapping
+import com.dkprint.app.fabric.mapping.dto.FabricDto
 import com.dkprint.app.lamination.application.LaminationService
 import com.dkprint.app.lamination.domain.Lamination
 import com.dkprint.app.lamination.dto.LaminationDto
@@ -28,7 +28,6 @@ import com.dkprint.app.processing.application.ProcessingService
 import com.dkprint.app.processing.domain.Processing
 import com.dkprint.app.processing.dto.ProcessingDto
 import com.dkprint.app.slitting.application.SlittingService
-
 import com.dkprint.app.task.request.domain.TaskRequest
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
