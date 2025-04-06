@@ -4,9 +4,8 @@ import com.dkprint.app.core.dto.Paging
 import com.dkprint.app.core.dto.request.ReadAllRequest
 import com.dkprint.app.core.dto.request.SearchRequest
 import com.dkprint.app.core.dto.request.UpsertRequest
-import com.dkprint.app.core.dto.response.ReadAllResponse
+import com.dkprint.app.core.dto.response.BoardResponse
 import com.dkprint.app.core.dto.response.ReadResponse
-import com.dkprint.app.core.dto.response.SearchResponse
 import com.dkprint.app.core.dto.response.UpsertResponse
 import com.dkprint.app.details.application.DetailsService
 import com.dkprint.app.details.domain.Details
@@ -126,9 +125,9 @@ class TaskRequestFacade(
     }
 
     @Transactional
-    fun readAll(readAllRequest: ReadAllRequest): Paging<ReadAllResponse> {
+    fun readAll(readAllRequest: ReadAllRequest): Paging<BoardResponse> {
         val taskRequests: Page<TaskRequest> = taskRequestService.readAll(readAllRequest)
-        val response: Page<ReadAllResponse> = toResponse(taskRequests)
+        val response: Page<BoardResponse> = toBoardResponse(taskRequests)
         return Paging.from(response)
     }
 
@@ -145,9 +144,9 @@ class TaskRequestFacade(
     }
 
     @Transactional
-    fun search(request: SearchRequest): Paging<SearchResponse> {
+    fun search(request: SearchRequest): Paging<BoardResponse> {
         val taskRequests: Page<TaskRequest> = searchFacade.search(request)
-        val response: Page<SearchResponse> = toResponse(taskRequests)
+        val response: Page<BoardResponse> = toBoardResponse(taskRequests)
         return Paging.from(response)
     }
 
@@ -180,7 +179,7 @@ class TaskRequestFacade(
         printDesigns?.forEach { printDesignService.create(taskRequestId, taskRequestNumber, productName, it) }
     }
 
-    private inline fun <reified T> toResponse(taskRequests: Page<TaskRequest>): Page<T> {
+    private fun toBoardResponse(taskRequests: Page<TaskRequest>): Page<BoardResponse> {
         return taskRequests.map { taskRequest ->
             val taskRequestId: Long = taskRequest.id
             val details: Details = detailsService.findByTaskRequestId(taskRequestId)
@@ -209,37 +208,19 @@ class TaskRequestFacade(
             // TODO: laminations.map { lamination ->vendorSdk.findVendorNameById(lamination.vendorId) }
             val processingVendorName: String = "대경" // TODO: vendorSdk.findVendorNameById(processing.vendorId)
 
-            when (T::class) {
-                ReadAllResponse::class -> ReadAllResponse(
-                    taskRequestId = taskRequestId,
-                    orderDate = orderDate,
-                    taskRequestNumber = taskRequest.taskRequestNumber,
-                    productCode = code,
-                    productName = details.productName,
-                    productStandard = productStandard,
-                    fabricExpectedArrivalDate = fabricExpectedArrivalDate,
-                    copperplateExpectedArrivalDate = copperplateExpectedArrivalDate,
-                    productVendorName = productVendorName,
-                    laminationVendorNames = laminationVendorNames,
-                    processingVendorName = processingVendorName,
-                ) as T
-
-                SearchResponse::class -> SearchResponse(
-                    taskRequestId = taskRequestId,
-                    orderDate = orderDate,
-                    taskRequestNumber = taskRequest.taskRequestNumber,
-                    productCode = code,
-                    productName = details.productName,
-                    productStandard = productStandard,
-                    fabricExpectedArrivalDate = fabricExpectedArrivalDate,
-                    copperplateExpectedArrivalDate = copperplateExpectedArrivalDate,
-                    productVendorName = productVendorName,
-                    laminationVendorNames = laminationVendorNames,
-                    processingVendorName = processingVendorName,
-                ) as T
-
-                else -> throw IllegalArgumentException("지원되지 않는 반환 클래스입니다.")
-            }
+            BoardResponse(
+                taskRequestId = taskRequestId,
+                orderDate = orderDate,
+                taskRequestNumber = taskRequest.taskRequestNumber,
+                productCode = code,
+                productName = details.productName,
+                productStandard = productStandard,
+                fabricExpectedArrivalDate = fabricExpectedArrivalDate,
+                copperplateExpectedArrivalDate = copperplateExpectedArrivalDate,
+                productVendorName = productVendorName,
+                laminationVendorNames = laminationVendorNames,
+                processingVendorName = processingVendorName,
+            )
         }
     }
 }
