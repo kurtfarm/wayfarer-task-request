@@ -48,7 +48,7 @@ class TaskRequestService(
         return existing.update(updated)
     }
 
-    @CacheEvict(value = ["taskRequestRead"], key = "#taskRequestNumber")
+    @CacheEvict(value = ["taskRequestRead"], key = "'v1::' + #taskRequestNumber")
     @Transactional
     fun delete(taskRequestNumber: String): Long {
         val taskRequest: TaskRequest = taskRequestRepository.findByTaskRequestNumber(taskRequestNumber)
