@@ -32,18 +32,6 @@ class RedisConfig(
     private val port: Int,
 ) {
     @Bean
-    fun objectMapper(): ObjectMapper {
-        return jacksonObjectMapper()
-            .registerModule(JavaTimeModule())
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .activateDefaultTyping(
-                LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.NON_FINAL,
-                JsonTypeInfo.As.PROPERTY,
-            )
-    }
-
-    @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
         val redisConfig: RedisConfiguration = RedisStandaloneConfiguration(host, port)
         return LettuceConnectionFactory(redisConfig)
@@ -51,12 +39,21 @@ class RedisConfig(
 
     @Bean
     fun redisCacheManager(redisConnectionFactory: RedisConnectionFactory): CacheManager {
+        val objectMapper: ObjectMapper = jacksonObjectMapper()
+            .registerModule(JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .activateDefaultTyping(
+                LaissezFaireSubTypeValidator.instance,
+                ObjectMapper.DefaultTyping.NON_FINAL,
+                JsonTypeInfo.As.PROPERTY,
+            )
+
         val defaultConfig: RedisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
             .serializeKeysWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer())
             ).serializeValuesWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(
-                    GenericJackson2JsonRedisSerializer(objectMapper())
+                    GenericJackson2JsonRedisSerializer(objectMapper)
                 )
             ).entryTtl(Duration.ofMinutes(10))
 
