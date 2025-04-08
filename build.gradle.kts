@@ -21,4 +21,13 @@ subprojects {
     apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
+
+    dependencies {
+        "implementation"("software.amazon.awssdk:s3:2.31.3")
+
+        "testImplementation"("org.springframework.boot:spring-boot-starter-test")
+        "testImplementation"("org.jetbrains.kotlin:kotlin-test-junit5")
+
+        "testRuntimeOnly"("org.junit.platform:junit-platform-launcher")
+    }
 }
