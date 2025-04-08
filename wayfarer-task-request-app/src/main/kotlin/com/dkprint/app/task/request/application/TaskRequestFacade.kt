@@ -66,7 +66,7 @@ class TaskRequestFacade(
         return UpsertResponse(taskRequest.id, taskRequest.taskRequestNumber)
     }
 
-    @Cacheable(value = ["taskRequestRead"], key = "'v1:' + #taskRequestNumber")
+    @Cacheable(value = ["taskRequestRead"], key = "#taskRequestNumber")
     @Transactional
     fun read(taskRequestNumber: String): ReadResponse {
         val taskRequest: TaskRequest = taskRequestService.read(taskRequestNumber)
@@ -131,7 +131,7 @@ class TaskRequestFacade(
         return Paging.from(response)
     }
 
-    @CacheEvict(value = ["taskRequestRead"], key = "'v1:' + #taskRequestNumber")
+    @CacheEvict(value = ["taskRequestRead"], key = "#taskRequestNumber")
     @Transactional
     fun update(
         taskRequestNumber: String,
