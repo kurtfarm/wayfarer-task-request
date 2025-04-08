@@ -32,14 +32,8 @@ class RedisConfig(
     private val port: Int,
 ) {
     @Bean
-    fun redisConnectionFactory(): RedisConnectionFactory {
-        val redisConfig: RedisConfiguration = RedisStandaloneConfiguration(host, port)
-        return LettuceConnectionFactory(redisConfig)
-    }
-
-    @Bean
-    fun redisCacheManager(redisConnectionFactory: RedisConnectionFactory): CacheManager {
-        val objectMapper: ObjectMapper = jacksonObjectMapper()
+    fun objectMapper(): ObjectMapper {
+        return jacksonObjectMapper()
             .registerModule(JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .activateDefaultTyping(
@@ -47,20 +41,32 @@ class RedisConfig(
                 ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.PROPERTY,
             )
+    }
 
-        val cacheConfig: RedisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+    @Bean
+    fun redisConnectionFactory(): RedisConnectionFactory {
+        val redisConfig: RedisConfiguration = RedisStandaloneConfiguration(host, port)
+        return LettuceConnectionFactory(redisConfig)
+    }
+
+    @Bean
+    fun redisCacheManager(redisConnectionFactory: RedisConnectionFactory): CacheManager {
+        val defaultConfig: RedisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
             .serializeKeysWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(
-                    StringRedisSerializer()
-                )
+                RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer())
             ).serializeValuesWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(
-                    GenericJackson2JsonRedisSerializer(objectMapper)
+                    GenericJackson2JsonRedisSerializer(objectMapper())
                 )
             ).entryTtl(Duration.ofMinutes(10))
 
+        val customConfigs: Map<String, RedisCacheConfiguration> = mapOf(
+            "taskRequestRead" to defaultConfig.entryTtl(Duration.ofMinutes(10)),
+        )
+
         return RedisCacheManager.builder(redisConnectionFactory)
-            .cacheDefaults(cacheConfig)
+            .cacheDefaults(defaultConfig)
+            .withInitialCacheConfigurations(customConfigs)
             .build()
     }
 }
