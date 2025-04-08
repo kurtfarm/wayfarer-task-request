@@ -17,7 +17,3 @@ tasks.bootJar {
 tasks.jar {
     enabled = true
 }
-
-noArg {
-    annotation("com.dkprint.app.core.annotation.NoArg")
-}
