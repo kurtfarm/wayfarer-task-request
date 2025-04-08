@@ -1,8 +1,9 @@
 package com.dkprint.app.core.config
 
-import com.dkprint.app.core.dto.response.ReadResponse
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.time.Duration
@@ -17,7 +18,7 @@ import org.springframework.data.redis.connection.RedisConfiguration
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.StringRedisSerializer
 
@@ -41,16 +42,20 @@ class RedisConfig(
         val objectMapper: ObjectMapper = jacksonObjectMapper()
             .registerModule(JavaTimeModule())
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .activateDefaultTyping(
+                LaissezFaireSubTypeValidator.instance,
+                ObjectMapper.DefaultTyping.NON_FINAL,
+                JsonTypeInfo.As.PROPERTY,
+            )
 
         val cacheConfig: RedisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
             .serializeKeysWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(
                     StringRedisSerializer()
                 )
-            )
-            .serializeValuesWith(
+            ).serializeValuesWith(
                 RedisSerializationContext.SerializationPair.fromSerializer(
-                    Jackson2JsonRedisSerializer(objectMapper, ReadResponse::class.java)
+                    GenericJackson2JsonRedisSerializer(objectMapper)
                 )
             ).entryTtl(Duration.ofMinutes(10))
 

@@ -1,11 +1,9 @@
 package com.dkprint.app.details.dto
 
-import com.dkprint.app.core.annotation.NoArg
 import com.dkprint.app.details.domain.Details
 import java.time.LocalDate
 
-@NoArg
-data class DetailsDto(
+class DetailsDto(
     val productName: String,
     val productType: String,
     val standardWidth: Int,

@@ -1,11 +1,9 @@
 package com.dkprint.app.processing.dto
 
-import com.dkprint.app.core.annotation.NoArg
 import com.dkprint.app.processing.domain.Processing
 import java.time.LocalDate
 
-@NoArg
-data class ProcessingDto(
+class ProcessingDto(
     val taskType: String,
     val quantity: Int,
     val side: String,
