@@ -31,6 +31,10 @@ class RedisConfig(
     @Value("\${spring.data.redis.port}")
     private val port: Int,
 ) {
+    companion object {
+        private const val TASK_REQUEST_READ_KEY: String = "taskRequestRead"
+    }
+
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
         val redisConfig: RedisConfiguration = RedisStandaloneConfiguration(host, port)
@@ -58,7 +62,7 @@ class RedisConfig(
             ).entryTtl(Duration.ofMinutes(10))
 
         val customConfigs: Map<String, RedisCacheConfiguration> = mapOf(
-            "taskRequestRead" to defaultConfig.entryTtl(Duration.ofMinutes(10)),
+            TASK_REQUEST_READ_KEY to defaultConfig.entryTtl(Duration.ofMinutes(10)),
         )
 
         return RedisCacheManager.builder(redisConnectionFactory)
