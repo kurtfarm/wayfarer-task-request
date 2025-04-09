@@ -3,7 +3,7 @@ package com.dkprint.app.details.dto
 import com.dkprint.app.details.domain.Details
 import java.time.LocalDate
 
-class DetailsDto(
+data class DetailsDto(
     val productName: String,
     val productType: String,
     val standardWidth: Int,

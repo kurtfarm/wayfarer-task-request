@@ -3,7 +3,7 @@ package com.dkprint.app.processing.dto
 import com.dkprint.app.processing.domain.Processing
 import java.time.LocalDate
 
-class ProcessingDto(
+data class ProcessingDto(
     val taskType: String,
     val quantity: Int,
     val side: String,

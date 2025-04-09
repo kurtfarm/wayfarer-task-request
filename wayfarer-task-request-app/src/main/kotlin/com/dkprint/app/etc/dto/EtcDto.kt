@@ -3,7 +3,7 @@ package com.dkprint.app.etc.dto
 import com.dkprint.app.etc.domain.Etc
 import java.time.LocalDate
 
-class EtcDto(
+data class EtcDto(
     val taskName: String,
     val taskType: String,
     val quantity: Int,

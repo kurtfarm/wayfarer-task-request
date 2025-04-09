@@ -2,7 +2,7 @@ package com.dkprint.app.fabric.mapping.dto
 
 import java.time.LocalDate
 
-class FabricDto(
+data class FabricDto(
     val fabricClass: Int,
     val fabricType: String,
     val standardThickness: Int,

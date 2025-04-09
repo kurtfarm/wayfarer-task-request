@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class PrintingDto(
+data class PrintingDto(
     val numberOfInks: String,
     val copperplateWidth: Int,
     val copperplateLength: Int,
