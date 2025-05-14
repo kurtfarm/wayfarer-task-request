@@ -1,0 +1,9 @@
+jdk:
+  - openjdk17
+build:
+  gradle:
+    root: wayfarer-task-request-sdk
+
+  artifacts:
+    - path: wayfarer-task-request/build/libs/wayfarer-task-request-sdk-0.0.1-plain.jar
+      dest: wayfarer-task-request-0.0.1.jar

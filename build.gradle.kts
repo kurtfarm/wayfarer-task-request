@@ -1,14 +1,17 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version "1.9.25" apply false
     kotlin("plugin.spring") version "1.9.25" apply false
     kotlin("plugin.jpa") version "1.9.25" apply false
     id("org.springframework.boot") version "3.4.2" apply false
     id("io.spring.dependency-management") version "1.1.7" apply false
+    id("java")
 }
 
 allprojects {
     group = "com.dkprint"
-    version = "0.0.1-SNAPSHOT"
+    version = "0.0.1"
 
     repositories {
         mavenCentral()
@@ -23,6 +26,17 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
 
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    tasks.withType<KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = "17"
+        }
+    }
+
     dependencies {
         "implementation"("software.amazon.awssdk:s3:2.31.3")
 
@@ -32,4 +46,3 @@ subprojects {
         "testRuntimeOnly"("org.junit.platform:junit-platform-launcher")
     }
 }
-
